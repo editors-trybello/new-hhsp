@@ -1271,9 +1271,75 @@ hr.section-rule {
    RESPONSIVE — MOBILE
 ============================================= */
 @media (max-width: 680px) {
-  body { font-size: 15.5px; }
-  h1 { font-size: 1.5rem; }
-  h2 { font-size: 1.3rem; }
+  body { font-size: 18px; }
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.2rem; }
+  p { font-size: 1.05rem; line-height: 1.85; }
+
+  /* Sticky bars */
+  #sticky-top { font-size: 0.95rem; }
+  #sticky-footer { font-size: 1rem; }
+
+  /* Hero */
+  .subheadline { font-size: 1.1rem; }
+  .bullet-list li { font-size: 1.05rem; }
+  .rating-line { font-size: 1rem; }
+  .stars { font-size: 1.15rem; }
+
+  /* Stats */
+  .stat-number { font-size: 2rem; }
+  .stat-label { font-size: 0.9rem; }
+  .stat-disclaimer { font-size: 0.82rem; }
+
+  /* Ingredients / accordion */
+  .accordion-trigger { font-size: 1.05rem; }
+  .accordion-body { font-size: 1rem; }
+  .highlight-box { font-size: 1rem; }
+
+  /* Proof points */
+  .proof-point-number { font-size: 1.6rem; }
+  .proof-point p { font-size: 0.95rem; }
+  .scarcity { font-size: 0.9rem; }
+
+  /* Timeline */
+  .timeline-phase-label { font-size: 0.85rem; }
+  .timeline-card-title { font-size: 1.05rem; }
+  .timeline-card-body p { font-size: 0.9rem; }
+
+  /* Offer cards */
+  .offer-price { font-size: 2.8rem; }
+  .offer-per-day { font-size: 0.82rem; }
+  .offer-title { font-size: 1.15rem; }
+  .offer-desc { font-size: 0.92rem; }
+  .offer-feature { font-size: 0.88rem; }
+  .guarantee-days { font-size: 1.6rem; }
+  .guarantee-label { font-size: 0.82rem; }
+
+  /* Testimonials */
+  .testimonial-name { font-size: 1.05rem; }
+  .testimonial-title { font-size: 1.05rem; }
+  .testimonial-body { font-size: 1rem; }
+  .testimonial-verified { font-size: 0.82rem; }
+
+  /* Extended reviews */
+  .extended-review-name { font-size: 0.9rem; }
+  .extended-review-title { font-size: 1.05rem; }
+  .extended-review-text { font-size: 1rem; }
+
+  /* How-to */
+  .step-label { font-size: 0.85rem; }
+  .step-text h3 { font-size: 1.05rem; }
+  .step-text p { font-size: 0.95rem; }
+  .pro-tip { font-size: 0.95rem; }
+
+  /* FAQ */
+  .faq-trigger { font-size: 1.05rem; }
+  .faq-body { font-size: 1rem; }
+
+  /* Final CTA */
+  .final-cta .offer-recap { font-size: 1rem; }
+  .btn { font-size: 1rem; padding: 16px 24px; }
 
   .section { padding: 44px 0; }
 
