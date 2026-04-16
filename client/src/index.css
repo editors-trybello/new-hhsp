@@ -1803,4 +1803,12 @@ hr.section-rule {
   .hero-v2-cta { font-size: 0.95rem; padding: 16px 20px; }
   .hero-v2-plan { padding: 12px 14px; }
   .hero-v2-plan-name { font-size: 0.9rem; }
+  /* Slider fills full width on mobile */
+  .product-slider {
+    max-width: 100% !important;
+    width: 100%;
+  }
+  .ps-thumbs {
+    max-width: 100% !important;
+  }
 }
