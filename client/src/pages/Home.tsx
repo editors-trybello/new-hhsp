@@ -161,7 +161,7 @@ function HeroSection() {
             </div>
 
             {/* Title */}
-            <h1 className="hero-v2-title">TryBello Hair Helper Spray</h1>
+            <h1 className="hero-v2-title">The 10-Second DHT Blocking Treatment That Reduced Shedding by 73% in 30 Days</h1>
 
             {/* Description */}
             <p className="hero-v2-desc">Board-certified dermatologist Dr. Yolanda Holmes developed this 10-second leave-in spray to block DHT directly at the follicle — 5 clinically-proven blockers at therapeutic concentrations. No drugs, no dependency, no dread shed.</p>
@@ -620,7 +620,7 @@ function OfferSection() {
 
           {/* Card 3: One-Time Purchase (muted) */}
           <div className="offer-card muted">
-            <div className="offer-plan-name">One-Time Purchase</div>
+            <div className="offer-plan-name">One-Time Order (1 Bottle)</div>
             <div className="offer-desc">1x Hair Helper Spray</div>
             <div className="offer-price" style={{ marginTop: "12px" }}>
               <span className="offer-price-main" style={{ fontSize: "2.6rem" }}>$49.00</span>
