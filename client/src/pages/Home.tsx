@@ -39,7 +39,7 @@ function ProductSlider() {
 
   return (
     <div>
-      <div className="product-slider" style={{ maxWidth: "520px", margin: "0 auto 16px" }}>
+      <div className="product-slider" style={{ maxWidth: "380px", margin: "0 auto 16px" }}>
         <div className="ps-track" style={{ transform: `translateX(-${current * 100}%)` }}>
           {IMG.productSlider.map((src, i) => (
             <div key={i} className="ps-slide">

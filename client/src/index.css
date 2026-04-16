@@ -1501,7 +1501,7 @@ hr.section-rule {
   flex-wrap: nowrap;
   overflow-x: auto;
   gap: 8px;
-  max-width: 520px;
+  max-width: 380px;
   margin: 0 auto 20px;
   padding-bottom: 6px;
   scrollbar-width: thin;
