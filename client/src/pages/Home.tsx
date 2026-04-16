@@ -1,862 +1,1017 @@
+/**
+ * Hair Helper Spray — Sales Page
+ * Exact port of /home/ubuntu/hairhelper/index.html
+ * Design: Halsten-inspired warm cream + crimson (#7B1D3A)
+ * Fonts: Playfair Display (display), Lora (body), DM Sans (UI)
+ */
+
 import { useState, useEffect, useRef } from "react";
 import { IMG } from "@/lib/images";
 
-// ─── Stars ───────────────────────────────────────────────────────────────────
-function Stars({ n = 5 }: { n?: number }) {
-  return (
-    <span className="text-amber-500 text-sm tracking-tight">
-      {"★".repeat(n)}{"☆".repeat(5 - n)}
-    </span>
-  );
+/* ── Stars ── */
+function Stars() {
+  return <span className="stars">★★★★★</span>;
 }
 
-// ─── Lifestyle Marquee ───────────────────────────────────────────────────────
+/* ── Lifestyle Marquee ── */
 function LifestyleMarquee() {
-  const doubled = [...IMG.lifestyle, ...IMG.lifestyle];
   return (
-    <div className="overflow-hidden py-6" style={{ background: "#F5F0EB" }}>
-      <div className="marquee-track gap-3" style={{ gap: "12px" }}>
-        {doubled.map((src, i) => (
-          <div key={i} className="flex-shrink-0" style={{ width: "160px" }}>
-            <img
-              src={src}
-              alt=""
-              className="rounded-xl object-cover"
-              style={{ width: "160px", height: "285px", objectFit: "cover" }}
-            />
-          </div>
+    <div className="lifestyle-strip">
+      <div className="lifestyle-track">
+        {IMG.lifestyle.map((src, i) => (
+          <img key={i} src={src} alt="Hair Helper Spray customer" loading="lazy" />
+        ))}
+        {IMG.lifestyle.map((src, i) => (
+          <img key={`dup-${i}`} src={src} alt="Hair Helper Spray customer" loading="lazy" />
         ))}
       </div>
     </div>
   );
 }
 
-// ─── Product Slider ──────────────────────────────────────────────────────────
+/* ── Product Slider ── */
 function ProductSlider() {
   const [current, setCurrent] = useState(0);
-  const total = IMG.productSlider.length;
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const TOTAL = IMG.productSlider.length;
+
+  const goTo = (n: number) => {
+    setCurrent(((n % TOTAL) + TOTAL) % TOTAL);
+  };
+
+  const resetAuto = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % TOTAL), 3500);
+  };
 
   useEffect(() => {
-    const t = setInterval(() => setCurrent(c => (c + 1) % total), 3500);
-    return () => clearInterval(t);
-  }, [total]);
+    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % TOTAL), 3500);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, []);
+
+  const handleMove = (dir: number) => { goTo(current + dir); resetAuto(); };
+  const handleDot = (i: number) => { goTo(i); resetAuto(); };
 
   return (
-    <div className="flex flex-col items-center" style={{ maxWidth: "520px", margin: "0 auto 40px" }}>
-      <div
-        className="relative overflow-hidden rounded-2xl"
-        style={{ width: "100%", aspectRatio: "1/1", boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }}
-      >
-        {IMG.productSlider.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt={`Product view ${i + 1}`}
-            className="absolute inset-0 w-full h-full transition-opacity duration-500"
-            style={{ objectFit: "contain", opacity: i === current ? 1 : 0 }}
-          />
-        ))}
-        <button
-          onClick={() => setCurrent(c => (c - 1 + total) % total)}
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center text-white"
-          style={{ background: "rgba(123,29,58,0.75)" }}
-        >‹</button>
-        <button
-          onClick={() => setCurrent(c => (c + 1) % total)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center text-white"
-          style={{ background: "rgba(123,29,58,0.75)" }}
-        >›</button>
+    <div>
+      <div className="product-slider" style={{ maxWidth: "520px", margin: "0 auto 36px" }}>
+        <div className="ps-track" style={{ transform: `translateX(-${current * 100}%)` }}>
+          {IMG.productSlider.map((src, i) => (
+            <div key={i} className="ps-slide">
+              <img src={src} alt={`TryBello Hair Helper Spray — slide ${i + 1}`} />
+            </div>
+          ))}
+        </div>
+        <button className="ps-btn ps-prev" onClick={() => handleMove(-1)} aria-label="Previous">←</button>
+        <button className="ps-btn ps-next" onClick={() => handleMove(1)} aria-label="Next">→</button>
+        <div className="ps-dots">
+          {IMG.productSlider.map((_, i) => (
+            <button key={i} className={`ps-dot${i === current ? " active" : ""}`} aria-label={`Slide ${i + 1}`} onClick={() => handleDot(i)} />
+          ))}
+        </div>
       </div>
-      <div className="flex gap-2 mt-3">
-        {IMG.productSlider.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className="rounded-full transition-all"
-            style={{
-              width: i === current ? "20px" : "8px",
-              height: "8px",
-              background: i === current ? "#7B1D3A" : "#D4C8C8",
-            }}
-          />
-        ))}
-      </div>
-      <h3 className="mt-4 text-center" style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#7B1D3A" }}>
-        TryBello Hair Helper Spray
-      </h3>
+      <p className="ps-title">TryBello Hair Helper Spray</p>
     </div>
   );
 }
 
-// ─── Accordion ───────────────────────────────────────────────────────────────
-function Accordion({ title, children }: { title: string; children: React.ReactNode }) {
+/* ── Accordion (ingredients) ── */
+function AccordionItem({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b" style={{ borderColor: "#E8E4DF" }}>
-      <button
-        className="w-full flex items-center justify-between py-4 text-left"
-        onClick={() => setOpen(o => !o)}
-      >
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "15px", color: "#3A3530" }}>
-          {title}
-        </span>
-        <span style={{ color: "#C4687A", fontSize: "20px", lineHeight: 1 }}>{open ? "−" : "+"}</span>
+    <div className="accordion-item">
+      <button className="accordion-trigger" onClick={() => setOpen(o => !o)}>
+        {title} <span className="acc-icon">{open ? "−" : "+"}</span>
       </button>
-      <div className={`accordion-body ${open ? "open" : ""}`}>
-        <div className="pb-4" style={{ fontFamily: "'Lora', serif", fontSize: "14px", color: "#5A5550", lineHeight: 1.7 }}>
-          {children}
-        </div>
-      </div>
+      <div className={`accordion-body${open ? " open" : ""}`}>{children}</div>
     </div>
   );
 }
 
-// ─── Section 1: Hero ─────────────────────────────────────────────────────────
+/* ── FAQ Item ── */
+function FaqItem({ question, children }: { question: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="faq-item">
+      <button className="faq-trigger" onClick={() => setOpen(o => !o)}>
+        {question} <span className="faq-icon">{open ? "−" : "+"}</span>
+      </button>
+      <div className={`faq-body${open ? " open" : ""}`}>{children}</div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 1: THE DIAGNOSIS (HERO)
+════════════════════════════════════════════════ */
 function HeroSection() {
   return (
-    <section style={{ background: "#FAF8F5", padding: "60px 0 40px" }}>
+    <div className="section" id="section1">
       <div className="container">
-        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", alignItems: "center" }}>
-          {/* Left: copy */}
-          <div>
-            <div className="section-eyebrow">Dermatologist Developed</div>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px, 4vw, 44px)", lineHeight: 1.15, color: "#3A3530", marginBottom: "20px" }}>
-              The Leave-In Spray That Targets the <em>Real</em> Reason You're Losing Hair After 40
-            </h1>
-            <span className="accent-rule left" />
-            <p style={{ marginTop: "20px", fontFamily: "'DM Sans', sans-serif", fontSize: "16px", color: "#5A5550", lineHeight: 1.7 }}>
-              Most women over 40 are fighting hair loss with the wrong weapons. Hair Helper Spray is the first leave-in DHT-blocking treatment formulated specifically for post-40 hormonal hair loss.
-            </p>
-            <ul style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              {[
-                "Blocks DHT at the scalp — the hormone driving 80% of post-40 hair loss",
-                "Leave-in formula absorbs in seconds, no rinse required",
-                "5 clinically-studied DHT blockers in one spray",
-                "Developed by Dr. Yolanda Holmes, Board-Certified Dermatologist",
-              ].map((b, i) => (
-                <li key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#3A3530" }}>
-                  <span style={{ color: "#7B1D3A", marginTop: "2px", flexShrink: 0 }}>✓</span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-            <div style={{ marginTop: "28px", display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-              <Stars />
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#7B1D3A", fontWeight: 600 }}>4.9 / 5 — 60,000+ women</span>
+
+        <div className="hero-layout">
+          {/* Left: Product + Dr. Holmes */}
+          <div className="hero-product-col">
+            <img className="product-main" src={IMG.heroProduct} alt="Hair Helper Spray by TryBello — Dermatologist Approved, DHT Blocker Verified" />
+            <div className="dr-credit">
+              <img src={IMG.drHolmesRef} alt="Dr. Yolanda Holmes, MD, FAAD" />
+              <div className="dr-credit-text">
+                <strong>Dr. Yolanda Holmes, MD, FAAD</strong>
+                Board-Certified Dermatologist<br />Washington, D.C.
+              </div>
             </div>
-            <a
-              href="#offer"
-              style={{ display: "inline-block", marginTop: "24px", background: "#2D5A27", color: "white", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "15px", padding: "14px 32px", borderRadius: "6px", textDecoration: "none", letterSpacing: "0.02em" }}
-            >
-              Start My Growth Protocol →
-            </a>
-            <p style={{ marginTop: "8px", fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#888", textAlign: "left" }}>
-              180-Day Empty Bottle Guarantee
-            </p>
           </div>
-          {/* Right: product image */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <img
-              src={IMG.heroProduct}
-              alt="Hair Helper Spray"
-              style={{ maxWidth: "100%", width: "420px", borderRadius: "16px" }}
-            />
+
+          {/* Right: Copy */}
+          <div className="hero-copy-col">
+            <h1>The 10-Second DHT-Blocking Treatment That Reduced Shedding by 73% in 30 Days</h1>
+            <hr className="accent-rule pink" />
+            <p className="subheadline">Board-certified dermatologist Dr. Yolanda Holmes developed this 10-second spray to block DHT directly at the follicle — where it actually matters.</p>
+
+            <ul className="bullet-stack">
+              <li>5 clinically-proven DHT blockers at therapeutic concentrations</li>
+              <li>Leave-in formula — works for hours, not the 60 seconds a shampoo gives you</li>
+              <li>No drugs, no dependency, no "dread shed"</li>
+              <li>Visible results in as little as 30 days</li>
+              <li>Weightless, non-greasy, fits into any routine</li>
+            </ul>
+
+            <div className="rating-line"><Stars /> &nbsp;4.8/5 &nbsp;•&nbsp; 60,000+ Reviews</div>
+
+            <a href="#section5" className="btn btn-lg">Start Your Treatment — 180-Day Guarantee</a>
           </div>
         </div>
 
-        {/* Stats strip */}
-        <div className="stats-strip" style={{ marginTop: "48px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", borderTop: "1px solid #E8E4DF", paddingTop: "32px" }}>
-          {[
-            { n: "60,000+", label: "Women Treated" },
-            { n: "5", label: "DHT Blockers" },
-            { n: "90%", label: "See Results by Day 60" },
-            { n: "180-Day", label: "Money-Back Guarantee" },
-          ].map((s, i) => (
-            <div key={i} style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", color: "#7B1D3A", fontWeight: 700 }}>{s.n}</div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#888", marginTop: "4px", letterSpacing: "0.04em", textTransform: "uppercase" }}>{s.label}</div>
-            </div>
-          ))}
+        {/* Before/After Thumbnails */}
+        <div className="ba-strip">
+          <img src={IMG.baHero} alt="Before and after hair results week 1 vs week 7" />
+          <img src={IMG.timelinePhase2} alt="Hair part line stabilization" />
+          <img src={IMG.timelinePhase3} alt="Baby hairs growing at hairline" />
+          <img src={IMG.timelinePhase4} alt="Fuller, healthier hair after treatment" />
+          <img src={IMG.reviewers.jennifer} alt="Jennifer M. — verified customer result" />
         </div>
+
+        {/* Stats Strip */}
+        <div className="stats-strip">
+          <div className="stat-block">
+            <span className="stat-number">73%</span>
+            <div className="stat-label">of users report less shedding within 30 days of consistent use</div>
+          </div>
+          <div className="stat-block">
+            <span className="stat-number">1.5x</span>
+            <div className="stat-label">Visual improvement: 88.9% vs. 60% with minoxidil</div>
+          </div>
+          <div className="stat-block">
+            <span className="stat-number">Safe</span>
+            <div className="stat-label">No dread shed. No dependency. No unwanted facial hair.</div>
+          </div>
+        </div>
+        <p style={{ fontSize: "0.72rem", color: "#888", fontFamily: "Arial,sans-serif", lineHeight: 1.4, marginTop: "6px" }}>
+          Based on clinical studies of active ingredients including caffeine (15.33% hair loss reduction in multicenter trial), sophora flavescens (increased follicle density via IGF-1), and rice extract (5α-reductase inhibition). Individual results may vary.
+        </p>
 
         {/* As Seen In */}
-        <div style={{ marginTop: "32px", textAlign: "center" }}>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase", color: "#AAA", marginBottom: "12px" }}>As Seen In</p>
-          <div style={{ display: "flex", justifyContent: "center", gap: "32px", flexWrap: "wrap", opacity: 0.45 }}>
-            {["Forbes", "Allure", "Vogue", "Healthline", "WebMD"].map(b => (
-              <span key={b} style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: "#3A3530" }}>{b}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 2: The Misdiagnosis ─────────────────────────────────────────────
-function MisdiagnosisSection() {
-  return (
-    <section style={{ background: "#F5F0EB", padding: "72px 0" }}>
-      <div className="container">
-        <div style={{ maxWidth: "760px", margin: "0 auto", textAlign: "center" }}>
-          <div className="section-eyebrow">The Misdiagnosis</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530", lineHeight: 1.2 }}>
-            Why Everything You've Tried Has Failed
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-          <p style={{ marginTop: "24px", fontFamily: "'Lora', serif", fontStyle: "italic", fontSize: "16px", color: "#5A5550", lineHeight: 1.75 }}>
-            "In 20 years of practice, I've seen thousands of women spend hundreds of dollars on shampoos, supplements, and serums that were never designed for what they're actually experiencing."
-          </p>
-          <p style={{ marginTop: "8px", fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#C4687A", fontWeight: 600 }}>
-            — Dr. Yolanda Holmes, Board-Certified Dermatologist
-          </p>
-        </div>
-
-        <div className="misdiagnosis-grid" style={{ marginTop: "56px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", alignItems: "start" }}>
-          <img
-            src={IMG.drHolmesConsult}
-            alt="Dr. Yolanda Holmes"
-            style={{ width: "100%", borderRadius: "14px", objectFit: "cover", aspectRatio: "4/5" }}
-          />
-          <div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#3A3530", marginBottom: "20px" }}>
-              The 5 Products That Can't Fix Hormonal Hair Loss
-            </h3>
-            {[
-              { name: "Biotin Supplements", reason: "Biotin deficiency is rare. If your hair loss is hormonal, biotin does nothing." },
-              { name: "Thickening Shampoos", reason: "They coat the hair shaft temporarily. They don't touch the follicle or DHT." },
-              { name: "Minoxidil (Rogaine)", reason: "Works for some, but requires daily use forever. Stop and the loss comes back — often worse." },
-              { name: "Scalp Serums (Rinse-Off)", reason: "If you rinse it off, the active ingredients don't have time to absorb into the follicle." },
-              { name: "Hair Vitamins", reason: "Most contain the same 3 ingredients at sub-therapeutic doses. Expensive and ineffective." },
-            ].map((item, i) => (
-              <div key={i} style={{ display: "flex", gap: "12px", marginBottom: "16px", alignItems: "flex-start" }}>
-                <span style={{ width: "22px", height: "22px", borderRadius: "50%", background: "#7B1D3A", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, flexShrink: 0, marginTop: "2px" }}>✕</span>
-                <div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#3A3530" }}>{item.name}</div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#6A6560", marginTop: "2px" }}>{item.reason}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 3: The Treatment ────────────────────────────────────────────────
-function TreatmentSection() {
-  const ingredients = [
-    {
-      name: "Saw Palmetto Extract",
-      dose: "320mg equivalent",
-      claim: "The most studied natural DHT blocker. Inhibits 5-alpha reductase — the enzyme that converts testosterone to DHT.",
-      studies: "12 clinical studies",
-    },
-    {
-      name: "Pumpkin Seed Oil",
-      dose: "5% concentration",
-      claim: "A 2014 randomized controlled trial showed 40% increase in hair count after 24 weeks.",
-      studies: "RCT published in Evidence-Based Complementary Medicine",
-    },
-    {
-      name: "Rosemary Leaf Extract",
-      dose: "Standardized 6:1",
-      claim: "In a head-to-head trial, rosemary extract matched minoxidil 2% for hair count at 6 months — with no scalp irritation.",
-      studies: "SKINmed Journal, 2015",
-    },
-    {
-      name: "Caffeine (Topical)",
-      dose: "0.2% solution",
-      claim: "Penetrates the hair follicle within 2 minutes of application. Counteracts DHT-induced suppression of hair growth.",
-      studies: "International Journal of Dermatology",
-    },
-    {
-      name: "Biotin (Topical)",
-      dose: "1% topical",
-      claim: "Unlike oral biotin, topical application delivers directly to the follicle where it's needed.",
-      studies: "Journal of Cosmetic Dermatology",
-    },
-  ];
-
-  return (
-    <section style={{ background: "#FAF8F5", padding: "72px 0" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div className="section-eyebrow">The Treatment</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530" }}>
-            5 Clinically-Studied DHT Blockers. One Spray.
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-        </div>
-
-        <div className="treatment-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", alignItems: "start" }}>
-          <div>
-            {ingredients.map((ing, i) => (
-              <Accordion key={i} title={ing.name}>
-                <p style={{ marginBottom: "6px" }}><strong>Dose:</strong> {ing.dose}</p>
-                <p style={{ marginBottom: "6px" }}>{ing.claim}</p>
-                <p style={{ color: "#C4687A", fontSize: "13px" }}>📚 {ing.studies}</p>
-              </Accordion>
-            ))}
-
-            {/* Leave-in vs rinse-off highlight */}
-            <div style={{ marginTop: "28px", background: "#FDF5F6", border: "1.5px solid #C4687A", borderRadius: "10px", padding: "18px 20px" }}>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#7B1D3A", marginBottom: "8px" }}>
-                Why Leave-In Changes Everything
-              </p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#5A5550", lineHeight: 1.65 }}>
-                Rinse-off products spend 2–3 minutes on your scalp. Leave-in products spend <strong>8–12 hours</strong>. That's the difference between a treatment and a wash.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <img
-              src={IMG.leaveInVsRinse}
-              alt="Leave-in vs rinse-off comparison"
-              style={{ width: "100%", borderRadius: "14px", marginBottom: "20px" }}
-            />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-              {[
-                { n: "5", label: "DHT Blockers" },
-                { n: "12h", label: "Active Contact Time" },
-                { n: "0", label: "Rinse Required" },
-              ].map((p, i) => (
-                <div key={i} style={{ background: "#F5F0EB", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", color: "#7B1D3A", fontWeight: 700 }}>{p.n}</div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: "#888", marginTop: "4px", textTransform: "uppercase", letterSpacing: "0.06em" }}>{p.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 4: The Protocol (Timeline) ──────────────────────────────────────
-function ProtocolSection() {
-  const phases = [
-    {
-      days: "Days 1–30",
-      title: "Phase 1: Scalp Reset",
-      img: IMG.timelinePhase1,
-      body: "DHT levels at the follicle begin to drop. Inflammation decreases. Most women notice reduced shedding by week 3.",
-      warning: "If you stop here, you'll miss the results. This is the setup phase.",
-    },
-    {
-      days: "Days 30–60",
-      title: "Phase 2: Follicle Reactivation",
-      img: IMG.timelinePhase2,
-      body: "Dormant follicles begin to wake up. You may notice baby hairs at the hairline and part. Density starts to improve.",
-      warning: "Most women who quit, quit here. The results are just beginning.",
-    },
-    {
-      days: "Days 60–90",
-      title: "Phase 3: Visible Growth",
-      img: IMG.timelinePhase3,
-      body: "Hair thickness measurably increases. The part line appears fuller. Friends and family start to notice.",
-      warning: null,
-    },
-    {
-      days: "90+ Days",
-      title: "Phase 4: Full Protocol Results",
-      img: IMG.timelinePhase4,
-      body: "90% of women in our study reported significant improvement in density, thickness, and overall hair health at the 90-day mark.",
-      warning: null,
-    },
-  ];
-
-  return (
-    <section style={{ background: "#F5F0EB", padding: "72px 0" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div className="section-eyebrow">The Protocol</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530" }}>
-            What Happens When You Stay the Course
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-          <div style={{ marginTop: "24px", background: "#FDF5F6", border: "1.5px solid #C4687A", borderRadius: "10px", padding: "16px 20px", maxWidth: "600px", margin: "24px auto 0" }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#7B1D3A", fontWeight: 600 }}>
-              ⚠️ The most important thing to know: You've probably quit a treatment that was working.
-            </p>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#5A5550", marginTop: "6px" }}>
-              Hair growth cycles are 90 days. Most women quit at 30. That's why nothing has worked.
-            </p>
+        <div className="as-seen-in">
+          <div className="as-seen-in-label">As Seen In</div>
+          <div className="as-seen-logos">
+            <span>Katie Couric Media</span>
+            <span>Forbes</span>
+            <span>Women's Health</span>
+            <span>Daily Mail</span>
+            <span>Yahoo!</span>
           </div>
         </div>
 
-        {/* Timeline cards */}
-        <div className="protocol-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", alignItems: "stretch" }}>
-          {phases.map((phase, i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
-              {/* Arrow connector */}
-              {i < phases.length - 1 && (
-                <div style={{ position: "absolute", right: "-14px", top: "50%", transform: "translateY(-50%)", zIndex: 10, fontSize: "22px", color: "#7B1D3A", fontWeight: 700 }}>→</div>
-              )}
-              <div style={{ background: "white", borderRadius: "14px", overflow: "hidden", width: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", margin: "0 8px" }}>
-                <img src={phase.img} alt={phase.title} style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover" }} />
-                <div style={{ padding: "16px" }}>
-                  <div style={{ background: "#7B1D3A", color: "white", borderRadius: "20px", padding: "3px 10px", fontSize: "10px", fontWeight: 700, display: "inline-block", marginBottom: "8px", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em" }}>
-                    {phase.days}
-                  </div>
-                  <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", color: "#3A3530", marginBottom: "8px" }}>{phase.title}</h4>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#6A6560", lineHeight: 1.6 }}>{phase.body}</p>
-                  {phase.warning && (
-                    <p style={{ marginTop: "10px", fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#C4687A", fontStyle: "italic" }}>
-                      ⚠️ {phase.warning}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 5: The Offer ─────────────────────────────────────────────────────
-function OfferSection() {
-  const offers = [
-    {
-      id: "one-time",
-      name: "One-Time Purchase",
-      bottles: "1 Bottle",
-      dailyPrice: "$1.63",
-      totalPrice: "$49",
-      perBottle: "$49 per bottle",
-      supply: "30-Day Supply",
-      highlight: false,
-      badge: null,
-      includes: ["1 × Hair Helper Spray (30ml)"],
-      guarantee: { days: "60", text: "60-Day Money-Back Guarantee" },
-      cta: "Start My Treatment →",
-    },
-    {
-      id: "one-month",
-      name: "1-Month Growth Plan",
-      bottles: "3 Bottles",
-      dailyPrice: "$1.33",
-      totalPrice: "$119",
-      perBottle: "$39.67 per bottle",
-      supply: "90-Day Supply",
-      highlight: false,
-      badge: null,
-      includes: [
-        "3 × Hair Helper Spray (30ml)",
-        "FREE Scalp Health Guide PDF",
-      ],
-      guarantee: { days: "120", text: "120-Day Money-Back Guarantee" },
-      cta: "Start My Treatment →",
-    },
-    {
-      id: "growth-protocol",
-      name: "3-Month Growth Protocol",
-      bottles: "6 Bottles",
-      dailyPrice: "$1.11",
-      totalPrice: "$199",
-      perBottle: "$33.17 per bottle",
-      supply: "180-Day Supply",
-      highlight: true,
-      badge: "Most Popular",
-      includes: [
-        "6 × Hair Helper Spray (30ml)",
-        "🎁 FREE Derma Roller — maximizes absorption & results",
-        "🎁 FREE 10-Step Guide to Hair Royalty",
-      ],
-      guarantee: { days: "180", text: "180-Day Empty Bottle Guarantee" },
-      cta: "Start My Growth Protocol →",
-    },
-  ];
-
-  return (
-    <section id="offer" style={{ background: "#FAF8F5", padding: "72px 0" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "16px" }}>
-          <div className="section-eyebrow">The Prescription</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530" }}>
-            The Treatment Dr. Holmes Recommends
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-        </div>
-
-        {/* Product Slider */}
-        <div style={{ marginTop: "40px" }}>
-          <ProductSlider />
-        </div>
-
-        {/* Offer cards */}
-        <div className="offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", alignItems: "start" }}>
-          {offers.map(offer => (
-            <div
-              key={offer.id}
-              style={{
-                background: "white",
-                borderRadius: "14px",
-                overflow: "hidden",
-                border: offer.highlight ? "2px solid #7B1D3A" : "1.5px solid #E8E4DF",
-                boxShadow: offer.highlight ? "0 8px 32px rgba(123,29,58,0.12)" : "0 2px 12px rgba(0,0,0,0.04)",
-                position: "relative",
-              }}
-            >
-              {offer.badge && (
-                <div style={{ background: "#7B1D3A", color: "white", textAlign: "center", padding: "8px", fontFamily: "'DM Sans', sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                  {offer.badge}
-                </div>
-              )}
-              <div style={{ padding: "24px" }}>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px" }}>{offer.supply}</div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", color: "#3A3530", marginBottom: "16px" }}>{offer.name}</h3>
-
-                {/* Daily price hero */}
-                <div style={{ display: "flex", alignItems: "baseline", gap: "6px", marginBottom: "4px" }}>
-                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "42px", fontWeight: 700, color: "#7B1D3A", lineHeight: 1 }}>{offer.dailyPrice}</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#888" }}>/ day</span>
-                </div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#AAA", marginBottom: "20px" }}>
-                  {offer.totalPrice} total · {offer.perBottle}
-                </div>
-
-                {/* Includes */}
-                <ul style={{ marginBottom: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                  {offer.includes.map((item, i) => (
-                    <li key={i} style={{ display: "flex", gap: "8px", alignItems: "flex-start", fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#3A3530" }}>
-                      <span style={{ color: "#2D5A27", flexShrink: 0, marginTop: "1px" }}>✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Guarantee badge */}
-                <div className="guarantee-badge">
-                  <div className="guarantee-days">{offer.guarantee.days}</div>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: "13px", color: "#7B1D3A", marginBottom: "2px" }}>Day Guarantee</div>
-                    <div style={{ fontSize: "12px", color: "#6A6560" }}>Try it risk-free. Full refund if you're not satisfied.</div>
-                  </div>
-                </div>
-
-                <a
-                  href="#"
-                  style={{
-                    display: "block",
-                    marginTop: "16px",
-                    textAlign: "center",
-                    background: offer.highlight ? "#2D5A27" : "#7B1D3A",
-                    color: "white",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontWeight: 600,
-                    fontSize: "14px",
-                    padding: "13px 20px",
-                    borderRadius: "6px",
-                    textDecoration: "none",
-                  }}
-                >
-                  {offer.cta}
-                </a>
-                <p style={{ textAlign: "center", fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: "#AAA", marginTop: "8px" }}>
-                  180-Day Guarantee · Free Shipping
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 6: The Evidence ──────────────────────────────────────────────────
-function EvidenceSection() {
-  const testimonials = [
-    {
-      name: "Jennifer M.",
-      age: 54,
-      img: IMG.reviewers.jennifer,
-      stars: 5,
-      headline: "I finally have my hair back.",
-      body: "I'd been losing hair for 3 years. Tried everything. Nothing worked. I started Hair Helper Spray in January and by March my hairdresser asked what I was doing differently. My part line is fuller than it's been in years.",
-      before: IMG.before1,
-      after: IMG.after1,
-    },
-    {
-      name: "Lisa K.",
-      age: 49,
-      img: IMG.reviewers.lisa,
-      stars: 5,
-      headline: "The shedding stopped within 3 weeks.",
-      body: "I was losing so much hair in the shower it was terrifying. Within 3 weeks of using Hair Helper Spray, the shedding dramatically reduced. By week 8 I was seeing new growth at my temples.",
-      before: IMG.before2,
-      after: IMG.after2,
-    },
-    {
-      name: "Karen T.",
-      age: 61,
-      img: IMG.reviewers.karen,
-      stars: 5,
-      headline: "Worth every penny.",
-      body: "I was skeptical because I'd wasted so much money on products that didn't work. But Dr. Holmes' explanation of why leave-in matters made sense to me. I'm 4 months in and the results are real.",
-      before: null,
-      after: null,
-    },
-  ];
-
-  const masonryReviewers = [
-    { name: "Diane M.", age: 58, img: IMG.reviewers.diane, text: "My stylist noticed before I did. She said my hair looked thicker and asked what I was using." },
-    { name: "Sandra L.", age: 52, img: IMG.reviewers.sandra, text: "I've tried everything. This is the first thing that actually worked for me." },
-    { name: "Margaret H.", age: 65, img: IMG.reviewers.margaret, text: "The shedding stopped in week 2. By week 6 I had baby hairs everywhere." },
-    { name: "Robin C.", age: 47, img: IMG.reviewers.robin, text: "I'm a nurse and I was skeptical. The research behind this product is solid." },
-    { name: "Carla W.", age: 55, img: IMG.reviewers.carla, text: "My confidence is back. I stopped wearing hats to cover my thinning crown." },
-    { name: "Theresa B.", age: 60, img: IMG.reviewers.theresa, text: "Three months in and my hair is the thickest it's been since my 30s." },
-  ];
-
-  return (
-    <section style={{ background: "#F5F0EB", padding: "72px 0" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div className="section-eyebrow">The Evidence</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530" }}>
-            60,000 Women Can't Be Wrong
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-          <div style={{ marginTop: "16px", display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}>
-            <Stars />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#7B1D3A", fontWeight: 600 }}>4.9 out of 5 — 60,000+ verified reviews</span>
-          </div>
-        </div>
-
-        {/* Before/after hero */}
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <img
-            src={IMG.baHero}
-            alt="Before and After"
-            style={{ maxWidth: "600px", width: "100%", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.10)" }}
-          />
-        </div>
-
-        {/* 3 featured testimonials */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "40px", marginBottom: "56px" }}>
-          {testimonials.map((t, i) => (
-            <div key={i} style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "28px", alignItems: "start", paddingBottom: "40px", borderBottom: i < testimonials.length - 1 ? "1px solid #E8E4DF" : "none" }}>
-              <img src={t.img} alt={t.name} style={{ width: "72px", height: "72px", borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-              <div>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "4px" }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#3A3530" }}>{t.name}</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#AAA" }}>Age {t.age}</span>
-                  <span style={{ background: "#7B1D3A", color: "white", fontSize: "10px", padding: "2px 8px", borderRadius: "4px", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>✓ Verified</span>
-                </div>
-                <Stars n={t.stars} />
-                <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "#3A3530", margin: "8px 0 10px" }}>{t.headline}</h4>
-                <p style={{ fontFamily: "'Lora', serif", fontSize: "14px", color: "#5A5550", lineHeight: 1.75 }}>{t.body}</p>
-                {t.before && t.after && (
-                  <div className="testimonial-ba-pair" style={{ maxWidth: "400px" }}>
-                    <div className="ba-img-wrap">
-                      <img src={t.before} alt="Before" />
-                      <span className="ba-label">Before</span>
-                    </div>
-                    <div className="ba-img-wrap">
-                      <img src={t.after} alt="After" />
-                      <span className="ba-label">After</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Masonry wall */}
-        <div className="masonry-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-          {masonryReviewers.map((r, i) => (
-            <div key={i} style={{ background: "white", borderRadius: "12px", padding: "18px", border: "1.5px solid #E8E4DF" }}>
-              <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
-                <img src={r.img} alt={r.name} style={{ width: "44px", height: "44px", borderRadius: "50%", objectFit: "cover" }} />
-                <div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "13px", color: "#3A3530" }}>{r.name}</div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: "#AAA" }}>Age {r.age}</div>
-                </div>
-              </div>
-              <Stars />
-              <p style={{ marginTop: "8px", fontFamily: "'Lora', serif", fontStyle: "italic", fontSize: "13px", color: "#5A5550", lineHeight: 1.65 }}>"{r.text}"</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 7: How To Use ────────────────────────────────────────────────────
-function HowToSection() {
-  const steps = [
-    { n: "01", title: "Section Your Hair", img: IMG.step1, desc: "Part your hair into sections to expose the scalp. Focus on areas of thinning — the crown, temples, and part line." },
-    { n: "02", title: "Apply Directly to Scalp", img: IMG.step2, desc: "Hold the bottle 2–3 inches from your scalp and spray 4–6 times per section. Target the scalp, not the hair shaft." },
-    { n: "03", title: "Massage In", img: IMG.step3, desc: "Use your fingertips to gently massage the product into the scalp for 60 seconds. This increases absorption and stimulates circulation." },
-    { n: "04", title: "Leave In — No Rinse", img: IMG.step4, desc: "Do not rinse. Style as normal. Apply morning or evening — consistency matters more than timing." },
-  ];
-
-  const faqs = [
-    { q: "How long until I see results?", a: "Most women notice reduced shedding within 2–3 weeks. Visible regrowth typically begins at 6–8 weeks. Full results are seen at 90 days." },
-    { q: "Can I use it with other hair products?", a: "Yes. Apply Hair Helper Spray first, let it absorb for 2–3 minutes, then style as normal. Avoid applying other scalp treatments on top." },
-    { q: "Is it safe for color-treated hair?", a: "Yes. Hair Helper Spray is formulated to be safe for all hair types including color-treated, relaxed, and natural hair." },
-    { q: "How often should I apply it?", a: "Once daily is the recommended protocol. Consistency is the most important factor — daily application produces significantly better results than sporadic use." },
-    { q: "Will it make my hair greasy?", a: "No. The formula is lightweight and absorbs within 2–3 minutes. Most women apply it before bed or before styling with no residue." },
-    { q: "What if it doesn't work for me?", a: "You're covered by our guarantee. One-time purchase: 60 days. 3-bottle plan: 120 days. 6-bottle protocol: 180 days. Full refund, no questions asked." },
-    { q: "Can I use it if I'm on medication?", a: "Consult your physician if you're on hormonal medications. The topical formula has minimal systemic absorption, but we recommend checking with your doctor." },
-    { q: "Is it safe during pregnancy or breastfeeding?", a: "We recommend consulting your OB/GYN before use during pregnancy or breastfeeding." },
-    { q: "How is this different from Rogaine?", a: "Rogaine (minoxidil) works by increasing blood flow. Hair Helper Spray works by blocking DHT — the hormone causing the loss. They work differently. Rogaine also requires lifelong use; stopping causes accelerated shedding. Hair Helper Spray addresses the root cause." },
-    { q: "Do I need to use it forever?", a: "No. The 90-day protocol is designed to reset your follicles. Many women maintain results with 3–4 applications per week after completing the full protocol." },
-    { q: "What's in it?", a: "Saw Palmetto Extract (320mg equivalent), Pumpkin Seed Oil (5%), Rosemary Leaf Extract (6:1 standardized), Topical Caffeine (0.2%), Topical Biotin (1%), plus a proprietary carrier blend for rapid absorption." },
-    { q: "Is it cruelty-free?", a: "Yes. Hair Helper Spray is cruelty-free, vegan, and free from sulfates, parabens, and synthetic fragrances." },
-    { q: "How do I cancel my subscription?", a: "Email support@trybello.com anytime. No cancellation fees, no questions asked." },
-  ];
-
-  return (
-    <section style={{ background: "#FAF8F5", padding: "72px 0" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div className="section-eyebrow">How To Use</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530" }}>
-            4 Steps. 60 Seconds. Every Day.
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-        </div>
-
-        <div className="how-to-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px", marginBottom: "72px" }}>
-          {steps.map((step, i) => (
-            <div key={i} style={{ textAlign: "center" }}>
-              <div style={{ borderRadius: "14px", overflow: "hidden", marginBottom: "16px", aspectRatio: "1/1" }}>
-                <img src={step.img} alt={step.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#C4687A", marginBottom: "6px" }}>
-                Step {step.n}
-              </div>
-              <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", color: "#3A3530", marginBottom: "8px" }}>{step.title}</h4>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#6A6560", lineHeight: 1.65 }}>{step.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* FAQ */}
-        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", color: "#3A3530", marginBottom: "24px", textAlign: "center" }}>
-            Frequently Asked Questions
-          </h3>
-          {faqs.map((faq, i) => (
-            <Accordion key={i} title={faq.q}>{faq.a}</Accordion>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Section 8: Extended Reviews ─────────────────────────────────────────────
-function ExtendedReviewsSection() {
-  const reviews = [
-    { name: "Diane M.", age: 58, img: IMG.reviewers.diane, stars: 5, headline: "I finally have a part line again.", body: "I'm 58 and I've been losing hair since I turned 52. I tried Rogaine for a year — it worked a little but the moment I stopped, everything fell out again. I tried biotin for two years. Nothing. I tried a $200 laser cap. Nothing. My dermatologist recommended Hair Helper Spray and I was skeptical because I'd heard that before. But she explained the DHT connection in a way that finally made sense to me. I started in September. By November my hairdresser asked what I was doing. By December my husband noticed. I'm now 6 months in and my part line is fuller than it's been since my 40s. I'm not exaggerating when I say this changed my life." },
-    { name: "Sandra L.", age: 52, img: IMG.reviewers.sandra, stars: 5, headline: "The only thing that's ever worked for me.", body: "I've been dealing with thinning hair since perimenopause started at 48. I've tried everything — supplements, serums, prescription treatments. Nothing made a real difference. A friend recommended Hair Helper Spray and I almost didn't try it because I was so tired of being disappointed. I'm so glad I did. The shedding slowed down in week 2. By week 6 I had baby hairs at my temples. I'm now at 4 months and the density improvement is real. My hair looks fuller, my scalp is less visible, and I actually feel like myself again." },
-    { name: "Margaret H.", age: 65, img: IMG.reviewers.margaret, stars: 5, headline: "At 65, I didn't think this was possible.", body: "My doctor told me my hair loss was just 'normal aging' and there wasn't much to do. I refused to accept that. I found Hair Helper Spray through a Facebook group for women with thinning hair. I was 64 when I started. Within 8 weeks I had new growth at my hairline. I'm now 65 and my hair is thicker than it was at 60. The leave-in formula is so easy to use — I just spray it on before bed and forget about it. I've recommended it to every woman I know over 50." },
-    { name: "Robin C.", age: 47, img: IMG.reviewers.robin, stars: 5, headline: "As a nurse, I was skeptical. I was wrong.", body: "I'm a nurse practitioner and I'm trained to be skeptical of health products. When I looked at the ingredient list and the research behind Hair Helper Spray, I was genuinely impressed. The saw palmetto and rosemary extract data is solid. I started using it at 47 when I noticed my part widening. Three months later, the difference is measurable. I've recommended it to several of my patients who are dealing with post-menopausal hair loss." },
-    { name: "Carla W.", age: 55, img: IMG.reviewers.carla, stars: 5, headline: "I stopped wearing hats.", body: "For two years I wore hats every time I left the house because I was so embarrassed by my thinning crown. I'd tried everything and nothing worked. I started Hair Helper Spray in March. By June I stopped wearing hats. My crown is noticeably fuller and I feel like myself again. The 180-day guarantee is what convinced me to try it — I figured I had nothing to lose. I'm so grateful I did." },
-    { name: "Theresa B.", age: 60, img: IMG.reviewers.theresa, stars: 5, headline: "Three months in and I'm amazed.", body: "I'm 60 and I started noticing significant thinning about 3 years ago. I tried minoxidil but the side effects bothered me. I tried supplements for a year with no results. Hair Helper Spray was recommended by my dermatologist and I'm so glad I listened. The spray is easy to use, doesn't leave residue, and actually works. Three months in and my hair is the thickest it's been since my 50s. The part line is fuller, the temples are filling in, and I'm not losing handfuls in the shower anymore." },
-    { name: "Patricia N.", age: 53, img: IMG.reviewers.patricia, stars: 5, headline: "Finally something that addresses the real cause.", body: "I appreciated that Dr. Holmes explained WHY hair loss happens after 40. Once I understood the DHT connection, everything made sense — why biotin didn't work, why shampoos didn't work, why I needed something that actually blocked the hormone at the follicle. I'm 3 months in and the results speak for themselves. Thicker hair, less shedding, and new growth at my hairline." },
-    { name: "Nancy R.", age: 57, img: IMG.reviewers.nancy, stars: 5, headline: "My confidence is back.", body: "Hair loss is more than just a cosmetic issue — it affects your confidence, your identity, how you feel about yourself. I spent two years feeling embarrassed and hopeless. Hair Helper Spray gave me my confidence back. I'm 4 months in and my hair looks better than it has in years. I style it differently now — I'm not trying to hide anything anymore. I'm showing it off." },
-    { name: "Kim S.", age: 44, img: IMG.reviewers.kim, stars: 5, headline: "Started early and so glad I did.", body: "I started noticing thinning at 42 and decided to act early rather than wait until it got worse. I'm glad I did. Hair Helper Spray has not only stopped the progression but actually improved my density. At 44, my hair is thicker than it was at 40. The leave-in formula fits perfectly into my morning routine — I spray it on, massage it in, and I'm done." },
-    { name: "Beverly T.", age: 62, img: IMG.reviewers.beverly, stars: 5, headline: "Worth every penny and then some.", body: "I was hesitant about the price at first. But when I thought about how much I'd spent on products that didn't work — hundreds of dollars on supplements, shampoos, serums — the price of Hair Helper Spray seemed very reasonable. And it actually works. I'm 62 and 5 months in, and my hair is the best it's looked in a decade. The 180-day guarantee meant I had nothing to lose. I'm so glad I tried it." },
-  ];
-
-  return (
-    <section style={{ background: "#F5F0EB", padding: "72px 0 100px" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div className="section-eyebrow">The Second Opinion</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#3A3530" }}>
-            In Their Own Words
-          </h2>
-          <span className="accent-rule" style={{ margin: "12px auto 0" }} />
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
-          {reviews.map((r, i) => (
-            <div key={i} style={{ background: "white", borderRadius: "14px", padding: "28px 32px", border: "1.5px solid #E8E4DF", display: "grid", gridTemplateColumns: "auto 1fr", gap: "24px", alignItems: "start" }}>
-              <img src={r.img} alt={r.name} style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover" }} />
-              <div>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "4px", flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#3A3530" }}>{r.name}</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#AAA" }}>Age {r.age}</span>
-                  <span style={{ background: "#7B1D3A", color: "white", fontSize: "10px", padding: "2px 8px", borderRadius: "4px", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>✓ Verified</span>
-                </div>
-                <Stars n={r.stars} />
-                <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: "17px", color: "#3A3530", margin: "8px 0 10px" }}>{r.headline}</h4>
-                <p style={{ fontFamily: "'Lora', serif", fontSize: "14px", color: "#5A5550", lineHeight: 1.8 }}>{r.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Final CTA */}
-        <div style={{ marginTop: "64px", textAlign: "center", background: "white", borderRadius: "16px", padding: "48px 32px", border: "1.5px solid #E8E4DF" }}>
-          <div className="section-eyebrow">Ready to Start?</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(22px, 3vw, 32px)", color: "#3A3530", marginBottom: "12px" }}>
-            Join 60,000 Women Who Chose to Act
-          </h2>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "#6A6560", maxWidth: "500px", margin: "0 auto 28px", lineHeight: 1.65 }}>
-            Start your 90-day protocol today. Covered by our 180-day empty bottle guarantee.
-          </p>
-          <a
-            href="#offer"
-            style={{ display: "inline-block", background: "#2D5A27", color: "white", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "16px", padding: "16px 40px", borderRadius: "6px", textDecoration: "none" }}
-          >
-            Start My Growth Protocol →
-          </a>
-          <p style={{ marginTop: "12px", fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#AAA" }}>
-            180-Day Empty Bottle Guarantee · Free Shipping · Cancel Anytime
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
-export default function Home() {
-  return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#FAF8F5" }}>
-      {/* Sticky top bar */}
-      <div className="sticky-top-bar">
-        🌿 Free Shipping on All Orders · 180-Day Empty Bottle Guarantee ·{" "}
-        <a href="#offer" style={{ color: "#FFD9A0", fontWeight: 700, textDecoration: "none" }}>
-          Start My Protocol →
-        </a>
-      </div>
-
-      <HeroSection />
-      <LifestyleMarquee />
-      <MisdiagnosisSection />
-      <TreatmentSection />
-      <ProtocolSection />
-      <OfferSection />
-      <EvidenceSection />
-      <HowToSection />
-      <ExtendedReviewsSection />
-
-      {/* Sticky footer */}
-      <div className="sticky-footer-bar">
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px" }}>
-          Hair Helper Spray — <strong>$1.11/day</strong> · 180-Day Guarantee
-        </span>
-        <a
-          href="#offer"
-          style={{ background: "#FAF8F5", color: "#7B1D3A", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "13px", padding: "8px 20px", borderRadius: "5px", textDecoration: "none", whiteSpace: "nowrap" }}
-        >
-          Start My Protocol →
-        </a>
       </div>
     </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 2: THE MISDIAGNOSIS
+════════════════════════════════════════════════ */
+function MisdiagnosisSection() {
+  return (
+    <div className="section alt-bg" id="section2">
+      <div className="container">
+
+        <h2>What 15 Years of Treating Hair Loss Taught Me About Why Your Products Stopped Working After 60 Seconds</h2>
+
+        <div className="two-col">
+          <div className="col-img">
+            <img src={IMG.drHolmesConsult} alt="Dr. Yolanda Holmes in consultation — board-certified dermatologist" />
+          </div>
+          <div className="col-text">
+            <p>"After 15 years of treating menopausal hair loss, I can tell you exactly why your medicine cabinet is full of half-used bottles that didn't work.</p>
+            <p>It's not because you picked the wrong brand. It's not because you weren't consistent enough. And it's not because your hair loss is 'too far gone.'</p>
+            <p>Every single one of those products failed because none of them were designed to do the one thing that actually matters: block DHT directly at the follicle, with enough contact time for the active ingredients to penetrate.</p>
+            <p>Let me walk you through what I mean."</p>
+          </div>
+        </div>
+
+        <img src={IMG.failedProducts} alt="Generic hair loss products that didn't work — minoxidil, supplements, shampoos" style={{ margin: "24px 0", maxHeight: "300px", width: "100%", objectFit: "cover" }} />
+
+        <div className="competitor-block">
+          <div className="competitor-name">Minoxidil (Rogaine)</div>
+          <p>Forces temporary blood flow to the scalp — but it cannot block DHT. The hormone that's actually shrinking your follicles keeps right on shrinking them. Plus, 70% of menopausal women lack the enzyme needed to activate minoxidil in the first place. And if you stop using it? Everything you gained falls out. That's not treatment. That's dependency.</p>
+        </div>
+
+        <div className="competitor-block">
+          <div className="competitor-name">Supplements (Nutrafol, Biotin, Viviscal)</div>
+          <p>Your body treats your scalp as peripheral tissue. When you swallow a pill, the nutrients get distributed across your entire body — and your scalp gets what's left over, if anything. Biotin is the most overhyped ingredient in hair loss. Unless you're clinically deficient — and 62% of women are not — it does almost nothing for shedding. You can't supplement your way out of a topical problem.</p>
+        </div>
+
+        <div className="competitor-block">
+          <div className="competitor-name">"Hair Growth" Shampoos</div>
+          <p>Here's the dirty secret of every DHT-blocking shampoo on the market: contact time. You lather, you rinse, 60 seconds later the active ingredients are going down the drain. Clinical studies on topical DHT blockers require sustained contact — hours, not seconds. A shampoo physically cannot deliver that. It doesn't matter how good the ingredients are if they never stay on your scalp long enough to reach the follicle.</p>
+        </div>
+
+        <div className="competitor-block">
+          <div className="competitor-name">Transplants</div>
+          <p>A $15,000 gamble. You're moving healthy follicles into the same DHT-hostile scalp environment that killed the original ones. A PNAS study proved that healthy follicles transplanted into aged, DHT-damaged tissue die. If you don't address the environment, the transplant fails.</p>
+        </div>
+
+        <div className="competitor-block">
+          <div className="competitor-name">Extensions &amp; Toppers</div>
+          <p>$200–500+ for temporary coverage. Clips, tape, and adhesive pull on your already fragile hair, causing traction damage and more thinning in the areas you're trying to protect. It's a cover-up that makes the underlying problem worse.</p>
+        </div>
+
+        <div className="dr-quote">
+          "Every one of these products either targets the wrong mechanism, can't deliver the active ingredients where they're needed, or doesn't stay on your scalp long enough to work.<br /><br />
+          So I built something that does all three."
+          <cite>— Dr. Yolanda Holmes, MD, FAAD</cite>
+        </div>
+
+        <div className="trust-ticker">Clinically Proven &nbsp;•&nbsp; Drug-Free &nbsp;•&nbsp; 100% Natural &nbsp;•&nbsp; Dermatologist Approved</div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 3: THE TREATMENT
+════════════════════════════════════════════════ */
+function TreatmentSection() {
+  return (
+    <div className="section" id="section3">
+      <div className="container">
+
+        <h2>The 10-Second Treatment Dr. Holmes Designed to Do What Nothing Else Could</h2>
+        <hr className="accent-rule" />
+
+        <div className="two-col">
+          <div className="col-img">
+            <img src={IMG.leaveInVsRinse} alt="Hair Helper Spray — 5 clinically-proven DHT blockers" />
+          </div>
+          <div className="col-text">
+            <p>"When I set out to formulate Hair Helper, I had three non-negotiables:</p>
+            <p>It had to block DHT directly at the follicle — not somewhere downstream, not systemically, right at the site where the damage happens.</p>
+            <p>It had to stay on the scalp for hours — not rinse off in 60 seconds like every shampoo on the market.</p>
+            <p>And it had to do both of those things without drugs, without side effects, and without creating the kind of dependency that keeps women trapped on minoxidil for life.</p>
+            <p>Most hair products use 1–2 active ingredients at minimum doses. Just enough to put on the label. Not enough to do anything meaningful at the follicle.</p>
+            <p>Hair Helper combines 5 clinically-proven DHT blockers at therapeutic concentrations — the doses that actually produced results in clinical studies."</p>
+          </div>
+        </div>
+
+        <div className="pink-highlight" style={{ margin: "20px 0" }}>
+          <strong>Why leave-in matters:</strong> Clinical studies on topical DHT blockers require sustained contact — hours, not seconds. Hair Helper stays on your scalp all day, giving active ingredients time to penetrate and work. Every shampoo, rinse, or conditioner on the market physically cannot do this.
+        </div>
+
+        <h3 style={{ marginTop: "24px" }}>Hair Helper Active Ingredients</h3>
+        <div className="ingredient-accordion">
+          <AccordionItem title="Caffeine">
+            Blocks DHT effects on follicles by inhibiting phosphodiesterase, prolonging the anagen (growth) phase. A multicenter clinical trial showed <strong>15.33% reduction in hair loss</strong> after just 2 months of topical use.
+          </AccordionItem>
+          <AccordionItem title="Sophora Flavescens Extract">
+            Inhibits 5α-reductase (the enzyme that creates DHT) and promotes IGF-1 and KGF expression for follicle reactivation and increased density.
+          </AccordionItem>
+          <AccordionItem title="Oryza Sativa (Rice) Extract">
+            Inhibits 5α-reductase via fatty acids, while antioxidants like γ-oryzanol address oxidative stress and promote the anagen phase.
+          </AccordionItem>
+          <AccordionItem title="Angelica Polymorpha Sinensis Root Extract">
+            Inhibits apoptosis (cell death) in follicles, reducing DHT-induced miniaturization and improving microcirculation and nutrient delivery.
+          </AccordionItem>
+          <AccordionItem title="Biotin">
+            Supports keratin production for follicle strength. Topical/oral combination studies show increased growth in women after 90–180 days — particularly effective for menopausal thinning.
+          </AccordionItem>
+        </div>
+
+        <div className="dr-quote" style={{ marginTop: "24px" }}>
+          "But here's what makes this fundamentally different from everything else you've tried:<br /><br />
+          Hair Helper is a leave-in treatment. You spray it directly onto your scalp and it stays there — working for hours, not seconds.<br /><br />
+          While a shampoo gives your follicles 60 seconds of contact with active ingredients before rinsing them down the drain, Hair Helper gives them continuous protection throughout the day and night.<br /><br />
+          That's why a 10-second spray can outperform products you've been using for months. It's not about what's in the bottle. It's about how long it stays on your scalp."
+          <cite>— Dr. Yolanda Holmes, MD, FAAD</cite>
+        </div>
+
+        <img src={IMG.leaveInVsRinse} alt="Leave-in vs rinse-off comparison: 60 seconds vs 8+ hours of contact time" style={{ margin: "20px 0", border: "1px solid #ddd" }} />
+
+        <div className="proof-points">
+          <div className="proof-point">
+            <span className="proof-point-number">DHT Blocked</span>
+            <p>5 clinically-proven DHT blockers working synergistically at the site of damage.</p>
+          </div>
+          <div className="proof-point">
+            <span className="proof-point-number">15.33%</span>
+            <p>Reduction in shedding in 2 months — clinical studies on key ingredients show measurable results without minoxidil's side effects.</p>
+          </div>
+          <div className="proof-point">
+            <span className="proof-point-number">+37%</span>
+            <p>Growth phase extended — each strand grows thicker and longer before naturally shedding, maximizing density.</p>
+          </div>
+        </div>
+
+        <a href="#section5" className="btn btn-center">Start Your Treatment — 180-Day Guarantee</a>
+        <p className="scarcity">● Due to limited supply of clinical-grade extracts, inventory is moving fast.</p>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 4: THE PROTOCOL (SUBSCRIPTION PRE-FRAME)
+════════════════════════════════════════════════ */
+function ProtocolSection() {
+  return (
+    <div className="section alt-bg" id="section4">
+      <div className="container">
+
+        <h2>What Dr. Holmes Warns Every Patient About Before They Start Treatment</h2>
+        <hr className="accent-rule" />
+
+        <div className="pink-highlight">
+          <strong>You've probably quit a treatment that was actually working.</strong> Not because you lacked discipline — but because no one told you what was happening inside your follicles at each stage.
+        </div>
+        <p>Most of what you've tried over the years was never going to work — we just covered why. Wrong mechanism, wrong delivery, wrong contact time.</p>
+        <p>But somewhere in your history, there may have been a product that was starting to do something. Your shedding slowed. Maybe you saw a few baby hairs. Something was happening.</p>
+        <p>And then you stopped.</p>
+        <p>Not because you lacked discipline. Not because you didn't care enough. But because you ran out. You forgot to reorder. A week went by. Then two. And the follicles that were just starting to wake up slipped back into dormancy.</p>
+        <p>You blamed yourself. "I probably just wasn't consistent enough."</p>
+        <p>We hear this from women every single day.</p>
+
+        <div className="dr-quote">
+          "The issue was never your discipline. It was your supply chain.<br /><br />
+          Your follicles don't take days off. DHT doesn't pause because you forgot to reorder on Tuesday. The moment the DHT blockers stop arriving, the damage resumes — and weeks of progress can quietly reverse.<br /><br />
+          After 15 years of treating hair loss, I can tell you this is the single biggest reason women don't see the results they deserve. Not the wrong product. Not bad genetics. Not age.<br /><br />
+          A gap in treatment at the worst possible moment."
+          <cite>— Dr. Yolanda Holmes, MD, FAAD</cite>
+        </div>
+
+        <h3 style={{ marginTop: "28px" }}>Here's Exactly What Happens to Your Follicles When You Stay Consistent — And What Happens When You Don't</h3>
+
+        <div className="timeline-track">
+          <div className="timeline-row">
+
+            {/* Phase 1 */}
+            <div className="timeline-card">
+              <div className="timeline-card-img">
+                <img src={IMG.timelinePhase1} alt="Days 1-30: The Protection Phase" />
+              </div>
+              <div className="timeline-card-body">
+                <span className="phase-day-pill">Days 1–30:</span>
+                <div className="phase-header">The Protection Phase</div>
+                <p>Less hair in the drain. The DHT blockers are working. Shedding slows — no "Dread Shed" like minoxidil.</p>
+                <div className="phase-warning"><em>Stop here and</em> shedding resumes within days.</div>
+              </div>
+            </div>
+
+            {/* Arrow 1→2 */}
+            <div className="timeline-arrow">
+              <div className="timeline-arrow-inner">
+                <div className="timeline-arrow-line"></div>
+                <div className="timeline-arrow-head"></div>
+                <span className="timeline-arrow-label">Day 30</span>
+              </div>
+            </div>
+
+            {/* Phase 2 */}
+            <div className="timeline-card">
+              <div className="timeline-card-img">
+                <img src={IMG.timelinePhase2} alt="Days 30-60: The Stabilization Phase" />
+              </div>
+              <div className="timeline-card-body">
+                <span className="phase-day-pill">Days 30–60:</span>
+                <div className="phase-header">The Stabilization Phase</div>
+                <p>Shedding keeps dropping. Tiny baby hairs appear along your part line — dormant follicles waking up.</p>
+                <div className="phase-warning"><em>Stop here and</em> those baby hairs may not survive.</div>
+              </div>
+            </div>
+
+            {/* Arrow 2→3 */}
+            <div className="timeline-arrow">
+              <div className="timeline-arrow-inner">
+                <div className="timeline-arrow-line"></div>
+                <div className="timeline-arrow-head"></div>
+                <span className="timeline-arrow-label">Day 60</span>
+              </div>
+            </div>
+
+            {/* Phase 3 */}
+            <div className="timeline-card">
+              <div className="timeline-card-img">
+                <img src={IMG.timelinePhase3} alt="Days 60-90: The Awakening Phase" />
+              </div>
+              <div className="timeline-card-body">
+                <span className="phase-day-pill">Days 60–90:</span>
+                <div className="phase-header">The Awakening Phase</div>
+                <p>The critical window. Fine baby hairs are strengthening. Follicles completing their first full protected growth cycle.</p>
+                <div className="phase-warning"><em>Stop here and</em> you quit at the worst possible moment — mid-cycle.</div>
+              </div>
+            </div>
+
+            {/* Arrow 3→4 */}
+            <div className="timeline-arrow">
+              <div className="timeline-arrow-inner">
+                <div className="timeline-arrow-line"></div>
+                <div className="timeline-arrow-head"></div>
+                <span className="timeline-arrow-label">Day 90</span>
+              </div>
+            </div>
+
+            {/* Phase 4 */}
+            <div className="timeline-card">
+              <div className="timeline-card-img">
+                <img src={IMG.timelinePhase4} alt="90+ days: The Transformation Phase" />
+              </div>
+              <div className="timeline-card-body">
+                <span className="phase-day-pill" style={{ color: "#1A1505" }}>90+ Days:</span>
+                <div className="phase-header">The Transformation Phase</div>
+                <p>Thicker, stronger strands. Baby hairs maturing into visible hair. Your hairdresser asks what you're doing differently.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Dr. Holmes authority photo + closing quote */}
+        <div className="two-col" style={{ marginTop: "28px" }}>
+          <div className="col-img">
+            <img src={IMG.drHolmesRef} alt="Dr. Yolanda Holmes, MD, FAAD — Board-Certified Dermatologist" />
+            <p style={{ fontFamily: "Arial,sans-serif", fontSize: "0.78rem", color: "#666", marginTop: "8px", textAlign: "center" }}>
+              Dr. Yolanda C. Holmes, MD, FAAD<br />Board-Certified Dermatologist<br />Washington, D.C.
+            </p>
+          </div>
+          <div className="col-text">
+            <div className="dr-quote">
+              "This is exactly why I created the Hair Helper Growth Protocol.<br /><br />
+              I saw too many of my patients get to day 45, run out, forget to reorder, lose two weeks, and then tell me 'it stopped working.' It didn't stop working. They stopped using it.<br /><br />
+              The Growth Protocol ensures you have uninterrupted supply through every phase of follicle recovery. No gaps. No guessing. No wondering if it would have worked if you'd just stuck with it a little longer.<br /><br />
+              And I want to be clear about what this is not.<br /><br />
+              This is not a subscription trap. I know you've been burned before. Companies like Vegamour and Keranique use subscriptions to lock women into paying for products that don't work, with cancellation processes designed to make you give up.<br /><br />
+              The Growth Protocol is the opposite. You can skip a shipment. You can pause. You can cancel anytime through your online portal — no phone calls, no hoops, no fees. We don't want your money if it's not working. That's why we offer a guarantee that gets longer the more you commit.<br /><br />
+              This is a treatment plan — designed around how your follicles actually recover. Not a billing arrangement designed around how much revenue we can extract."
+              <cite>— Dr. Yolanda Holmes, MD, FAAD</cite>
+            </div>
+          </div>
+        </div>
+
+        <div className="closing-bold">One bottle is a preview. The protocol is the treatment.</div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 5: THE PRESCRIPTION (OFFER MODULE)
+════════════════════════════════════════════════ */
+function OfferSection() {
+  return (
+    <div className="section" id="section5">
+      <div className="container">
+
+        <h2>The Treatment Dr. Holmes Recommends</h2>
+        <hr className="accent-rule" />
+
+        <ProductSlider />
+
+        {/* Offer Cards */}
+        <div className="offer-cards">
+
+          {/* Card 1: 3-Month Growth Protocol (HIGHLIGHTED) */}
+          <div className="offer-card highlighted">
+            <div className="offer-badge">Dr. Holmes Recommends</div>
+            <div className="offer-plan-name">3-Month Growth Protocol</div>
+            <div className="offer-desc">3x Hair Helper Spray — Delivered every 90 days</div>
+            <span className="offer-price-daily">$1.11</span>
+            <span className="offer-price-daily-label">per day — less than a cup of coffee</span>
+            <div className="offer-price">
+              <span className="offer-price-total-label">Total:</span>
+              <span className="offer-price-strike">$209.91</span>
+              <span className="offer-price-main">$99.97</span>
+            </div>
+            <ul className="offer-includes">
+              <li>Free shipping on every shipment</li>
+              <li><strong>FREE Derma Roller</strong> — maximizes absorption &amp; results</li>
+              <li><strong>FREE 10-Step Guide to Hair Royalty</strong></li>
+            </ul>
+            <div className="offer-guarantee-badge">
+              <span className="guarantee-days-num">180</span>
+              <div className="guarantee-text"><strong>Day Empty Bottle Guarantee</strong>Complete the full protocol. If you don't see results, we refund every penny.</div>
+            </div>
+            <div className="offer-cancel">Skip, pause, or cancel anytime — no commitments, no hassle</div>
+            <a href="#" className="btn btn-full">Add to Cart → 180-Day Guarantee</a>
+            <div className="offer-dr-quote">"This is the protocol I recommend to every patient. 90 days gives your follicles one full growth cycle of uninterrupted protection." — Dr. Holmes</div>
+          </div>
+
+          {/* Card 2: 1-Month Growth Plan */}
+          <div className="offer-card">
+            <div className="offer-plan-name">1-Month Growth Plan</div>
+            <div className="offer-desc">1x Hair Helper Spray — Delivered monthly</div>
+            <span className="offer-price-daily">$1.33</span>
+            <span className="offer-price-daily-label">per day</span>
+            <div className="offer-price">
+              <span className="offer-price-total-label">Total:</span>
+              <span className="offer-price-strike">$69.99</span>
+              <span className="offer-price-main">$39.97</span>
+            </div>
+            <ul className="offer-includes">
+              <li>Free shipping</li>
+            </ul>
+            <div className="offer-guarantee-badge">
+              <span className="guarantee-days-num">120</span>
+              <div className="guarantee-text"><strong>Day Guarantee</strong>Try it for 4 months. Not satisfied? Full refund, no questions asked.</div>
+            </div>
+            <div className="offer-cancel">Skip, pause, or cancel anytime</div>
+            <a href="#" className="btn btn-full">Add to Cart</a>
+          </div>
+
+          {/* Card 3: One-Time Purchase (muted) */}
+          <div className="offer-card muted">
+            <div className="offer-plan-name">One-Time Purchase</div>
+            <div className="offer-desc">1x Hair Helper Spray</div>
+            <span className="offer-price-daily" style={{ color: "#8A8078" }}>$1.63</span>
+            <span className="offer-price-daily-label">per day</span>
+            <div className="offer-price">
+              <span className="offer-price-total-label">Total:</span>
+              <span className="offer-price-main">$49.00</span>
+            </div>
+            <ul className="offer-includes">
+              <li>Standard shipping</li>
+            </ul>
+            <div className="offer-guarantee-badge">
+              <span className="guarantee-days-num">60</span>
+              <div className="guarantee-text"><strong>Day Guarantee</strong>Try it risk-free. Full refund if you're not satisfied.</div>
+            </div>
+            <div className="offer-cancel">&nbsp;</div>
+            <a href="#" className="btn btn-full" style={{ background: "#777" }}>Add to Cart</a>
+          </div>
+
+        </div>
+
+        {/* Guarantee Block */}
+        <div className="guarantee-block">
+          <h3>Our Guarantee Scales With Your Commitment</h3>
+          <p>Growth Protocol members receive our extended <strong>180-Day Empty Bottle Guarantee</strong> — because you're committing to the full treatment, and we match that commitment with ours. Use every drop. If you don't see a difference in your shedding, density, or overall hair health after completing the protocol, send back the empty bottles. We'll refund every penny.</p>
+          <p style={{ marginTop: "8px" }}>1-Month Growth Plan members receive our <strong>120-day guarantee</strong>.<br />One-time buyers receive our <strong>60-day guarantee</strong>.</p>
+          <p style={{ marginTop: "8px", fontWeight: 700 }}>The more you commit, the more we protect you.</p>
+          <div className="guarantee-tiers">
+            <div className="guarantee-tier">
+              <span className="guarantee-days">180</span>
+              <div className="guarantee-tier-name">Days — Growth Protocol</div>
+            </div>
+            <div className="guarantee-tier">
+              <span className="guarantee-days" style={{ fontSize: "1.1rem" }}>120</span>
+              <div className="guarantee-tier-name">Days — Growth Plan</div>
+            </div>
+            <div className="guarantee-tier">
+              <span className="guarantee-days" style={{ fontSize: "0.95rem", color: "#777" }}>60</span>
+              <div className="guarantee-tier-name">Days — One-Time</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rating-line" style={{ textAlign: "center" }}><Stars /> &nbsp;4.8/5 &nbsp;•&nbsp; 60,000+ Reviews &nbsp;•&nbsp; Limited Time Discount Auto-Applied</div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 6: THE EVIDENCE (SOCIAL PROOF)
+════════════════════════════════════════════════ */
+function EvidenceSection() {
+  return (
+    <div className="section alt-bg" id="section6">
+      <div className="container">
+
+        <h2>Real Results From Women Who Were Ready to Give Up</h2>
+        <hr className="accent-rule" />
+        <p>These women had tried everything — Rogaine, biotin, Nutrafol, Vegamour, laser caps, PRP, extensions. They were skeptical. Most had been burned before. Here's what happened when they gave their follicles the full protocol.</p>
+
+        {/* Before/After Hero */}
+        <div style={{ margin: "20px 0", textAlign: "center" }}>
+          <p style={{ fontFamily: "Arial,sans-serif", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#555", marginBottom: "8px" }}>THICKER, FULLER HAIR THAT LASTS</p>
+          <img src={IMG.baHero} alt="Before and after: Week 1 vs Week 7 hair transformation" style={{ width: "100%", borderRadius: "10px" }} />
+        </div>
+
+        {/* Testimonial 1 — Jennifer M. */}
+        <div className="testimonial-card">
+          <div className="testimonial-header">
+            <img src={IMG.reviewers.jennifer} alt="Jennifer M." />
+            <div className="testimonial-meta">
+              <div className="testimonial-name">Jennifer M. &nbsp;<span className="stars" style={{ fontSize: "0.9rem" }}>★★★★★</span></div>
+              <div className="testimonial-title">I was skeptical after wasting money on Nutrafol and Vegamour...</div>
+            </div>
+          </div>
+          <div className="testimonial-body">"But I noticed less hair in my shower drain by week 3 with TryBello. Now at month 4, I have baby hairs growing where my scalp was showing through. My hairdresser asked what I'm doing differently. This is the first product that actually worked without making my scalp burn or causing more shedding."</div>
+          <div className="testimonial-ba">
+            <div className="testimonial-ba-item">
+              <img src={IMG.before1} alt="Jennifer M. before — visible scalp thinning at crown" />
+              <span className="testimonial-ba-label">Before</span>
+            </div>
+            <div className="testimonial-ba-item">
+              <img src={IMG.after1} alt="Jennifer M. after — noticeably fuller crown and part line" />
+              <span className="testimonial-ba-label">After</span>
+            </div>
+          </div>
+          <div className="verified-badge">✓ Verified Purchase</div>
+        </div>
+
+        {/* Testimonial 2 — Lisa K. */}
+        <div className="testimonial-card">
+          <div className="testimonial-header">
+            <img src={IMG.reviewers.lisa} alt="Lisa K." />
+            <div className="testimonial-meta">
+              <div className="testimonial-name">Lisa K. &nbsp;<span className="stars" style={{ fontSize: "0.9rem" }}>★★★★★</span></div>
+              <div className="testimonial-title">My part is finally filling in!</div>
+            </div>
+          </div>
+          <div className="testimonial-body">"After 6 months of consistent use, my part looks tighter and my crown has noticeably more coverage. It took patience — I didn't see baby hairs until week 8 — but I'm so glad I stuck with it. My husband even commented that my hair looks fuller."</div>
+          <div className="testimonial-ba">
+            <div className="testimonial-ba-item">
+              <img src={IMG.before2} alt="Lisa K. before — thinning hairline and temple recession" />
+              <span className="testimonial-ba-label">Before</span>
+            </div>
+            <div className="testimonial-ba-item">
+              <img src={IMG.after2} alt="Lisa K. after — fuller hairline and regrowth at temples" />
+              <span className="testimonial-ba-label">After</span>
+            </div>
+          </div>
+          <div className="verified-badge">✓ Verified Purchase</div>
+        </div>
+
+        {/* Testimonial 3 — Karen T. */}
+        <div className="testimonial-card">
+          <div className="testimonial-header">
+            <img src={IMG.reviewers.karen} alt="Karen T." />
+            <div className="testimonial-meta">
+              <div className="testimonial-name">Karen T. &nbsp;<span className="stars" style={{ fontSize: "0.9rem" }}>★★★★★</span></div>
+              <div className="testimonial-title">I've tried Rogaine, biotin, laser caps, expensive shampoos... nothing worked.</div>
+            </div>
+          </div>
+          <div className="testimonial-body">"I have tried 4–5 different hair growth products including Vegamour, Nutrafol, Act + Acre, and prescription minoxidil. TryBello has been the best in terms of real results. I do think it's important to understand you need patience and consistency. I use the spray nightly before bed. Over the past 3 months I have had major regrowth at my temples and along my midline part — both areas I was most worried about. The shedding stopped first, then the baby hairs came in. This spray is excellent and something I will keep using!"</div>
+          <div className="verified-badge">✓ Verified Purchase</div>
+        </div>
+
+        <a href="#section5" className="btn btn-center">Start Your Treatment — 180-Day Guarantee</a>
+        <p className="scarcity">● Due to limited supply of clinical-grade extracts, inventory is moving fast.</p>
+
+        <div className="trust-ticker" style={{ marginTop: "16px" }}>Clinically Proven &nbsp;•&nbsp; Drug-Free &nbsp;•&nbsp; 100% Natural &nbsp;•&nbsp; Dermatologist Approved</div>
+
+        {/* Masonry Wall */}
+        <h3 style={{ marginTop: "32px", marginBottom: "16px" }}>More Results From Our Community</h3>
+        <div className="masonry-wall">
+
+          <div className="masonry-item">
+            <img src={IMG.reviewers.jennifer} alt="Janet W." />
+            <div className="masonry-reviewer">Janet W. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
+            <div className="masonry-text">"I had no hair growth at both sides of fringe before using TryBello. You can see how it has made a big difference after starting this. My fringe too is getting longer and thicker. Going to continue with this spray until I reach the thickness of the fringe I want. Highly recommend."</div>
+            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          </div>
+
+          <div className="masonry-item">
+            <img src={IMG.reviewers.lisa} alt="Mondaya H." />
+            <div className="masonry-reviewer">Mondaya H. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
+            <div className="masonry-text">"I have lost my hair since I became a mum, and have been trying out many hair products to assist hair regrowth for quite some time now. I ordered 3 bottles back in early May 2024. It's been 4 weeks since I tried. Twice a day everyday. I used 1 bottle now and results are very obvious, the front hair line on both sides are more fuller."</div>
+            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          </div>
+
+          <div className="masonry-item">
+            <img src={IMG.reviewers.karen} alt="Linda Z." />
+            <div className="masonry-reviewer">Linda Z. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
+            <div className="masonry-text">"I was completely bald 4 months ago. I've been using TryBello for about 2½ months now and I have a ton of regrowth in the temple area. My hair also feels thicker all over. Is really seeing results and I am very happy."</div>
+            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          </div>
+
+          <div className="masonry-item">
+            <img src={IMG.reviewers.diane} alt="Mary H." />
+            <div className="masonry-reviewer">Mary H. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
+            <div className="masonry-text">"Two years ago I was diagnosed with breast cancer. It was found early, but I had to have chemo. My hair fell out and I tried all sorts of shampoos and hair vitamins. Nothing seemed to help. About 4 months ago I saw an advertisement for TryBello and read the reviews. I decided to try it. After about 3 weeks I began to see an improvement. Now 4 months later I have hair!"</div>
+            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          </div>
+
+          <div className="masonry-item">
+            <img src={IMG.reviewers.sandra} alt="Gloria S." />
+            <div className="masonry-reviewer">Gloria S. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
+            <div className="masonry-text">"I was skeptical but yet excited. Within two weeks of using TryBello, some of the hair loss was growing back. Not a lot, but I could see it with a mirror. Now after 8–10 weeks I can see that some hairs have filled in. I am so excited. I'm really happy, and I'm so glad I didn't fall for all those other methods. TryBello really works!"</div>
+            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          </div>
+
+          <div className="masonry-item">
+            <img src={IMG.reviewers.margaret} alt="Tonya W." />
+            <div className="masonry-reviewer">Tonya W. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
+            <div className="masonry-text">"About 1 week after starting using the Hair Helper, I saw little hairs all over the previously bald area. That's enough incentive for me to consistently use the spray every night before bed. After three weeks, many of the new hairs were about 2 inches long."</div>
+            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 7: THE FOLLOW-UP (FAQ + HOW TO USE)
+════════════════════════════════════════════════ */
+function FollowUpSection() {
+  return (
+    <div className="section" id="section7">
+      <div className="container">
+
+        <h2>Everything You Need to Know Before Starting Treatment</h2>
+        <hr className="accent-rule" />
+
+        {/* How to Use */}
+        <h3 style={{ marginTop: "8px", marginBottom: "16px" }}>How to Apply Hair Helper</h3>
+        <p>Apply once daily, preferably in the evening or before bed — your scalp is in repair mode during sleep, maximizing DHT blocking effectiveness and absorption. You can also apply in the morning after showering — it won't interfere with styling.</p>
+        <p>The spray is lightweight, colorless, and absorbs quickly. No greasy residue. No staining. No rinsing required — it's a leave-in treatment.</p>
+
+        <div className="how-to-steps">
+
+          <div className="how-to-step">
+            <img src={IMG.step1} alt="Step 1: Part your hair to expose the scalp" loading="lazy" />
+            <div className="step-text">
+              <span className="step-number">Step 1</span>
+              <h3>Part &amp; Target</h3>
+              <div className="step-desc">Part your hair to expose the scalp where thinning is most visible — crown, part line, temples.</div>
+            </div>
+          </div>
+
+          <div className="how-to-step">
+            <img src={IMG.step2} alt="Step 2: Spray 4-6 pumps directly onto the scalp" loading="lazy" />
+            <div className="step-text">
+              <span className="step-number">Step 2</span>
+              <h3>Spray the Scalp</h3>
+              <div className="step-desc">Spray 4–6 pumps directly onto the scalp — not your hair. Target the areas where you see thinning or shedding.</div>
+            </div>
+          </div>
+
+          <div className="how-to-step">
+            <img src={IMG.step3} alt="Step 3: Massage gently with fingertips for 30 seconds" loading="lazy" />
+            <div className="step-text">
+              <span className="step-number">Step 3</span>
+              <h3>Massage In</h3>
+              <div className="step-desc">Massage gently with your fingertips for 30 seconds. This helps the DHT blockers penetrate the follicle.</div>
+            </div>
+          </div>
+
+          <div className="how-to-step">
+            <img src={IMG.step4} alt="Step 4: Let dry and style as usual" loading="lazy" />
+            <div className="step-text">
+              <span className="step-number">Step 4</span>
+              <h3>Style as Usual</h3>
+              <div className="step-desc">Let it dry for 1–2 minutes (it absorbs fast), then style your hair as usual. No residue. No weight.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="pro-tip"><strong>Pro Tip:</strong> Apply to dry or slightly damp scalp for best absorption. You can blow-dry, curl, or style immediately after.</div>
+
+        {/* FAQ */}
+        <h3 style={{ marginTop: "32px", marginBottom: "16px" }}>Frequently Asked Questions</h3>
+        <div className="faq-section">
+
+          <FaqItem question="Why does Dr. Holmes recommend 3 months?">
+            <div style={{ padding: "0 0 18px" }}>The hair growth cycle takes 90–120 days to complete. Most treatments fail because women stop at day 30–45, right when the follicles are just beginning to respond. Three months gives your follicles one full protected growth cycle — the minimum needed to see meaningful, lasting results. That's why the 3-Month Growth Protocol exists.</div>
+          </FaqItem>
+
+          <FaqItem question="Can I cancel the Growth Protocol anytime?">
+            <div style={{ padding: "0 0 18px" }}>Yes. Skip, pause, or cancel anytime through your online portal. No phone calls, no hoops, no cancellation fees. We built this as the opposite of every subscription you've been burned by before.</div>
+          </FaqItem>
+
+          <FaqItem question="I've been burned by subscriptions before. How is this different?">
+            <div style={{ padding: "0 0 18px" }}>We understand. Companies like Vegamour and Keranique use subscriptions to lock women into paying for products that don't work, with cancellation processes designed to frustrate you into staying. The Growth Protocol is the opposite: one-click cancel in your portal, no questions asked, no fees, no hoops. We don't want your money if it's not working. That's why our guarantee gets longer the more you commit — 180 days for protocol members.</div>
+          </FaqItem>
+
+          <FaqItem question="How is this different from minoxidil?">
+            <div style={{ padding: "0 0 18px" }}>Hair Helper uses natural DHT-blocking botanicals, not drugs. No "dread shed" phase, no dependency, no unwanted facial hair, no requirement to use it forever. Minoxidil forces temporary blood flow to follicles but can't stop DHT — the hormone that's actually shrinking your hair. Hair Helper blocks DHT directly at the follicle.</div>
+          </FaqItem>
+
+          <FaqItem question="How long before I see results?">
+            <div style={{ padding: "0 0 18px" }}>Most women notice less shedding within 30 days. Visible regrowth — baby hairs at the part line, improved density — typically appears around weeks 8–12. Full transformation takes 3–6 months of consistent daily use. That's why Dr. Holmes recommends the 3-Month Growth Protocol.</div>
+          </FaqItem>
+
+          <FaqItem question="Can I just try one bottle first?">
+            <div style={{ padding: "0 0 18px" }}>Absolutely. One bottle will show you Hair Helper is working — you'll notice less shedding and may see early baby hairs. Many women start with one bottle and upgrade to the Growth Protocol once they see those first signs. You'll have a shorter guarantee (60 days vs. 180 days for protocol members).</div>
+          </FaqItem>
+
+          <FaqItem question="Will it make my hair greasy or mess up my styling?">
+            <div style={{ padding: "0 0 18px" }}>Not at all. Hair Helper is a lightweight mist that absorbs in under 2 minutes. No residue, no greasiness, no interference with styling. You can spray it, blow-dry, curl, and go.</div>
+          </FaqItem>
+
+          <FaqItem question="Is it safe? Any side effects?">
+            <div style={{ padding: "0 0 18px" }}>Hair Helper is plant-powered, drug-free, hormone-free, sulfate-free, and paraben-free. Formulated specifically for sensitive, mature scalps. No dread shed, no scalp irritation, no unwanted facial hair. Over 60,000 women have used it with a 4.8/5 satisfaction rating.</div>
+          </FaqItem>
+
+          <FaqItem question="Will it work for my hair type?">
+            <div style={{ padding: "0 0 18px" }}>Hair Helper works on all hair types and textures — straight, wavy, curly, coily. It targets the follicle and scalp, not the hair shaft, so your texture doesn't affect efficacy. Specifically designed for women 40+ experiencing hormonal hair loss.</div>
+          </FaqItem>
+
+          <FaqItem question="What if it doesn't work for me?">
+            <div style={{ padding: "0 0 18px" }}>That's what the guarantee is for. Growth Protocol members get 180 days. 1-month plan members get 120 days. One-time buyers get 60 days. Use every drop — if you don't see a difference, send back the empty bottles for a full refund.</div>
+          </FaqItem>
+
+          <FaqItem question="Is it too late for me? My hair has been thinning for years.">
+            <div style={{ padding: "0 0 18px" }}>Unless your follicles are permanently scarred (which is rare), they can be reactivated. Dr. Holmes has seen results in women well into their 70s. The key is consistent DHT blocking to give dormant follicles a chance to wake up. Many of our most enthusiastic reviewers are 60+.</div>
+          </FaqItem>
+
+          <FaqItem question="How long does one bottle last?">
+            <div style={{ padding: "0 0 18px" }}>One bottle is a 30-day supply when used as directed (4–6 pumps daily). The 3-Month Growth Protocol delivers a fresh bottle every 30 days so you never run out during the critical growth phases.</div>
+          </FaqItem>
+
+          <FaqItem question="Where can I find Dr. Holmes' credentials?">
+            <div style={{ padding: "0 0 18px" }}>Dr. Yolanda C. Holmes, MD, FAAD, is a board-certified dermatologist based in Washington, D.C. She completed her medical degree at the Medical College of Pennsylvania (Drexel), her residency at Howard University, and is affiliated with Howard University Hospital and MedStar Washington Hospital Center. Over 15 years of experience treating hair loss in women.</div>
+          </FaqItem>
+
+        </div>
+
+        <a href="#section5" className="btn btn-center" style={{ marginTop: "28px" }}>Start Your Treatment — 180-Day Guarantee</a>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 8: THE SECOND OPINION (EXTENDED PROOF WALL)
+════════════════════════════════════════════════ */
+function SecondOpinionSection() {
+  return (
+    <div className="section alt-bg" id="section8">
+      <div className="container">
+
+        <span className="section-eyebrow">The Second Opinion</span>
+        <h2>What People, Just Like You, Are Saying About Hair Helper by TryBello</h2>
+        <hr className="accent-rule" />
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.diane} alt="Diane W." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Diane W. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I'd wasted over $2,000 on Nutrafol, Vegamour, and prescription Rogaine before finding this.</div>
+            <div className="extended-review-text">"I'm going to be honest — I almost didn't order this. After three years of spending money on products that either did nothing or made things worse (Rogaine gave me facial hair and Vegamour was impossible to cancel), I was done trying. My daughter sent me the link and I figured one more disappointment wouldn't kill me.<br /><br />Week 2, I noticed less hair in the shower drain. I thought it was a fluke. Week 4, my brush was noticeably cleaner after styling. By month 2, I had tiny baby hairs along my part line — the first new growth I'd seen in years.<br /><br />I'm on month 5 now. My hairdresser actually asked what I was doing differently. That's never happened with any product I've tried. I'm angry I wasted so much money on everything else first, but I'm grateful I finally found something that actually works."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.sandra} alt="Sandra L." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Sandra L. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I almost quit at month 2. Thank God I didn't.</div>
+            <div className="extended-review-text">"I need to be transparent about my experience because I almost gave up. Month 1, I saw less shedding — maybe 30% less in the drain. Good sign, but I've had products do that before and then nothing else happened.<br /><br />Month 2, the shedding stayed low but I wasn't seeing new growth yet. I was ready to write it off as another failure.<br /><br />Month 3 is when everything changed. Baby hairs appeared at my temples — actual visible new growth where I'd had nothing for two years. By month 4, those baby hairs had thickened and my part line was visibly narrower.<br /><br />I'm at 6 months now and my ponytail is noticeably thicker. Not back to what it was at 35, but I can wear it confidently again. The key was NOT stopping at month 2 like I wanted to. This works, but you have to give it the full cycle. I'm so glad I stayed on the subscription because if I'd had to remember to reorder, I definitely would have quit."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.margaret} alt="Margaret R." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Margaret R. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I'm 67 years old. I wish I'd found this five years ago.</div>
+            <div className="extended-review-text">"At my age, I honestly believed it was too late. My dermatologist told me thinning after menopause is 'just part of aging' and offered me Rogaine, which I'd already tried twice. I felt dismissed and hopeless.<br /><br />I've been using Hair Helper for 4 months now. The shedding stopped almost completely within the first 3 weeks. By week 8, I had baby hairs at my crown — the area I was most self-conscious about. Now at month 4, my part doesn't show nearly as much scalp as it did.<br /><br />My husband noticed before I even pointed it out. He said 'your hair looks different — fuller.' I nearly cried. I hadn't heard anything like that in years.<br /><br />To any woman in her 60s or 70s reading this thinking it's too late — it's not. I'm proof."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.robin} alt="Robin A." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Robin A. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I hate subscriptions. Here's why I'm keeping this one.</div>
+            <div className="extended-review-text">"Let me start by saying I DESPISE subscriptions. Vegamour trapped me for 6 months and I had to call THREE TIMES to cancel. Keranique was even worse. So when I saw TryBello had a subscription option, my first instinct was absolutely not.<br /><br />I started with a single bottle. By week 4, my shedding had slowed enough that I wanted to continue but I was terrified of running out and losing progress. So I tried the 3-month protocol — with my finger hovering over the cancel button.<br /><br />Here's what surprised me: when I logged into my account to check, there's literally a button that says 'cancel.' No phone call. No guilt trip. No 'are you sure?' loop. I actually tested it once by pausing a shipment and it worked immediately.<br /><br />I've been on the protocol for 5 months now and I have zero intention of canceling because it's actually working. My temples are filling in, my brush doesn't terrify me anymore, and I trust that if I ever want to stop, I actually can. That's the difference."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.carla} alt="Carla M." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Carla M. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I always blamed myself for quitting too early. Turns out I just needed a system.</div>
+            <div className="extended-review-text">"Every product I've ever tried, I used for maybe 6 weeks and stopped. Not because I didn't care — I'd just run out, forget to reorder, get busy, and by the time I remembered, I figured the progress was lost anyway. Then I'd blame myself for not being 'disciplined enough.'<br /><br />The Growth Protocol solved that problem completely. The bottle shows up every 30 days whether I remember or not. I haven't had a single gap in 4 months.<br /><br />The results speak for themselves. Month 1: shedding dropped from maybe 100+ hairs in the shower to about 30–40. Month 2: my brush stopped scaring me. Month 3: baby hairs at my part line. Month 4 (now): those baby hairs are thickening and I can see real density where I used to see scalp.<br /><br />I don't think it was ever about discipline. I just needed something that didn't let me accidentally quit."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.theresa} alt="Theresa K." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Theresa K. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I stopped avoiding mirrors. That's how I know it's working.</div>
+            <div className="extended-review-text">"For three years, I avoided certain lighting. I stopped taking photos. I made excuses to skip pool parties and beach trips. I wore hats in the summer even when it was 95 degrees. I stopped letting my husband run his fingers through my hair because I was afraid of what he'd feel.<br /><br />Hair loss took so much more from me than hair. It took my confidence, my social life, and honestly a piece of my identity.<br /><br />I'm 4 months into TryBello and I'm not going to pretend I have the hair I had at 30. I don't. But my part has narrowed significantly, the shedding has almost stopped, and I have real new growth coming in at my crown and temples.<br /><br />Last week I took a photo in direct sunlight and didn't delete it. That's the first time in three years. My daughter said I look like myself again. I don't think she'll ever understand how much that meant to me."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.patricia} alt="Patricia H." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Patricia H. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">I tracked everything. The numbers don't lie.</div>
+            <div className="extended-review-text">"I'm a retired nurse. I don't trust marketing claims — I trust data. So when I started Hair Helper, I documented everything.<br /><br />Week 1: Counted 87 hairs in the shower drain (my baseline). Week 4: Down to 41. Week 8: Down to 22. Week 12: 18 — and baby hairs visible at the part line.<br /><br />I also took photos of my part every two weeks under the same bathroom lighting. The difference between week 1 and week 12 is undeniable. Less visible scalp, more coverage, and texture that actually has some body to it again.<br /><br />I won't make claims about why it works better than the other products I've tried (Rogaine, Nioxin, Nutrafol). But I can tell you the numbers improved consistently every month, and at month 4, they're still improving. That's more than I can say for anything else I've used in 8 years."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.nancy} alt="Nancy B." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Nancy B. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">Between my mother's care and my grandkids, I'd forgotten about me.</div>
+            <div className="extended-review-text">"I spent three years taking care of my mother with dementia while helping raise my two grandchildren. Somewhere in that chaos, my hair started thinning badly and I just... didn't deal with it. There was always someone else who needed something more than I needed to look in the mirror.<br /><br />When Mom passed last year, I finally looked — really looked — at myself. My part was so wide I could see my entire scalp. My ponytail was the thickness of my pinky finger.<br /><br />A friend recommended TryBello. I almost didn't try it because I felt guilty spending money on myself. But it takes 10 seconds. Literally. I spray it before bed and forget about it. That's the only reason I've been consistent for 3 months — because it doesn't ask anything of me.<br /><br />The shedding stopped within the first month. I have baby hairs now at my temples and along my part. My granddaughter told me my hair looks 'fluffy' — her word, not mine. I actually laughed instead of cried for the first time in a long time.<br /><br />You're allowed to take care of yourself too. This is how I started."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.kim} alt="Kim D." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Kim D. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">My hairdresser thought I got extensions. I hadn't.</div>
+            <div className="extended-review-text">"I've been going to the same hairdresser for 11 years. She's watched my hair thin progressively since I hit menopause at 48. Every appointment she'd try to be kind about it, but we both knew it was getting worse.<br /><br />At my last appointment — after 3 months on TryBello — she literally stopped mid-shampoo and said 'Did you get extensions?' When I told her no, she ran her fingers along my hairline and said 'You have all this new growth here. What are you using?'<br /><br />She's now recommending it to her other clients who are dealing with thinning. That's the validation I needed from someone who sees thousands of heads of hair and has no reason to lie to me.<br /><br />My crown still needs work, but my temples and part line have filled in more in 3 months than anything else accomplished in 5 years."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        <div className="extended-review">
+          <img src={IMG.reviewers.beverly} alt="Beverly G." />
+          <div className="extended-review-body">
+            <div className="extended-review-name">Beverly G. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
+            <div className="extended-review-title">This was genuinely my last try before accepting wigs.</div>
+            <div className="extended-review-text">"I'm not exaggerating. I had a wig consultation booked for the following month when I ordered TryBello. I'd already picked out two human hair toppers because I was that far gone mentally. Eleven products over four years, thousands of dollars, and my hair was still getting thinner.<br /><br />I ordered one bottle with zero expectations. Week 4: the shower drain wasn't full anymore after styling. I started cautiously paying attention. Week 10: baby hairs. Real ones. At my temples where I'd lost the most.<br /><br />I cancelled the wig consultation. I'm on the 3-month protocol now and I'm not looking back. I still have a ways to go, but for the first time in four years, I'm going forward instead of backward.<br /><br />If you're at the end of your rope like I was — just try it. What's one more month of hope going to cost you? Less than that wig, I promise."</div>
+            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
+          </div>
+        </div>
+
+        {/* Final CTA Block */}
+        <div className="final-cta">
+          <div className="rating-line"><Stars /> &nbsp;4.8/5 &nbsp;•&nbsp; 60,000+ Reviews</div>
+          <a href="#section5" className="btn btn-lg" style={{ margin: "16px auto", display: "inline-block" }}>Start Your Treatment — 180-Day Guarantee</a>
+          <p className="scarcity">● Due to limited supply of clinical-grade extracts, inventory is moving fast.</p>
+          <p className="offer-recap">Start the 3-Month Growth Protocol today. $1.11/day. Free shipping. 180-day guarantee. Skip, pause, or cancel anytime.</p>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   ROOT EXPORT
+════════════════════════════════════════════════ */
+export default function Home() {
+  return (
+    <>
+      {/* Sticky Top Bar */}
+      <div id="sticky-top">Limited Time: Free Worldwide Shipping</div>
+
+      <HeroSection />
+      <hr className="section-rule" />
+
+      <LifestyleMarquee />
+      <hr className="section-rule" />
+
+      <MisdiagnosisSection />
+      <hr className="section-rule" />
+
+      <TreatmentSection />
+      <hr className="section-rule" />
+
+      <ProtocolSection />
+      <hr className="section-rule" />
+
+      <OfferSection />
+      <hr className="section-rule" />
+
+      <EvidenceSection />
+      <hr className="section-rule" />
+
+      <FollowUpSection />
+      <hr className="section-rule" />
+
+      <SecondOpinionSection />
+
+      {/* Sticky Footer Bar */}
+      <div id="sticky-footer">
+        <a href="#section5" className="sticky-cta-btn">Get Up to 50% OFF Today — Apply Discount &amp; Check Availability →</a>
+      </div>
+    </>
   );
 }
