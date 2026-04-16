@@ -41,6 +41,7 @@ export const IMG = {
 
   // Product slider (square)
   productSlider: [
+    `${CDN}/product-hero-roses_3d59f0f5.png`,
     `${CDN}/slider-1_fb24108b.png`,
     `${CDN}/slider-2_18e75545.png`,
     `${CDN}/slider-3_aa434147.png`,
