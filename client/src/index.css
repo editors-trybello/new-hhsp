@@ -1883,7 +1883,7 @@ hr.section-rule {
 
   /* Featured review below slider */
   .hero-featured-review {
-    display: none;
+    padding: 14px 16px;
   }
   .hero-review-quote { font-size: 0.9rem; }
   .hero-review-author { font-size: 0.82rem; }
