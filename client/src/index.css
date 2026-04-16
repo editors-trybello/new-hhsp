@@ -1794,21 +1794,98 @@ hr.section-rule {
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
+  /* ── Hero v2 mobile layout ── */
   .hero-v2-layout {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 12px 0 0;
   }
-  .hero-v2-title { font-size: 1.5rem; }
-  .hero-v2-cta { font-size: 0.95rem; padding: 16px 20px; }
-  .hero-v2-plan { padding: 12px 14px; }
-  .hero-v2-plan-name { font-size: 0.9rem; }
-  /* Slider fills full width on mobile */
+  .hero-v2-left {
+    width: 100%;
+    gap: 16px;
+  }
+  .hero-v2-right {
+    width: 100%;
+    gap: 14px;
+  }
+
+  /* Slider fills full width */
   .product-slider {
     max-width: 100% !important;
     width: 100%;
+    border-radius: 10px;
   }
   .ps-thumbs {
     max-width: 100% !important;
   }
+
+  /* Title */
+  .hero-v2-title {
+    font-size: 1.6rem;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  /* Description */
+  .hero-v2-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  /* Warning box */
+  .hero-v2-warning {
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .hero-v2-warning-title { font-size: 0.9rem; }
+  .hero-v2-warning-body { font-size: 0.85rem; }
+
+  /* Plan selector */
+  .hero-v2-plans-label { font-size: 0.75rem; }
+  .hero-v2-plan {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+  .hero-v2-plan-name { font-size: 0.9rem; }
+  .hero-v2-plan-daily { font-size: 0.95rem; }
+  .hero-v2-plan-total { font-size: 0.85rem; }
+  .hero-v2-plan-badge {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+  }
+
+  /* CTA button */
+  .hero-v2-cta {
+    font-size: 1rem;
+    padding: 16px 20px;
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+
+  /* In-stock line */
+  .hero-v2-stock {
+    font-size: 0.85rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* Dr. Holmes endorsement */
+  .hero-v2-endorsement {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+
+  /* Featured review below slider */
+  .hero-featured-review {
+    padding: 14px 16px;
+  }
+  .hero-review-quote { font-size: 0.9rem; }
+  .hero-review-author { font-size: 0.82rem; }
+  .hero-review-author img { width: 32px; height: 32px; }
 }
