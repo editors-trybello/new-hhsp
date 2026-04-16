@@ -142,14 +142,7 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* Before/After Thumbnails */}
-        <div className="ba-strip">
-          <img src={IMG.baHero} alt="Before and after hair results week 1 vs week 7" />
-          <img src={IMG.timelinePhase2} alt="Hair part line stabilization" />
-          <img src={IMG.timelinePhase3} alt="Baby hairs growing at hairline" />
-          <img src={IMG.timelinePhase4} alt="Fuller, healthier hair after treatment" />
-          <img src={IMG.reviewers.jennifer} alt="Jennifer M. — verified customer result" />
-        </div>
+
 
         {/* Stats Strip */}
         <div className="stats-strip">
@@ -209,8 +202,6 @@ function MisdiagnosisSection() {
           </div>
         </div>
 
-        <img src={IMG.failedProducts} alt="Generic hair loss products that didn't work — minoxidil, supplements, shampoos" style={{ margin: "24px 0", maxHeight: "300px", width: "100%", objectFit: "cover" }} />
-
         <div className="competitor-block">
           <div className="competitor-name">Minoxidil (Rogaine)</div>
           <p>Forces temporary blood flow to the scalp — but it cannot block DHT. The hormone that's actually shrinking your follicles keeps right on shrinking them. Plus, 70% of menopausal women lack the enzyme needed to activate minoxidil in the first place. And if you stop using it? Everything you gained falls out. That's not treatment. That's dependency.</p>
@@ -260,10 +251,7 @@ function TreatmentSection() {
         <h2>The 10-Second Treatment Dr. Holmes Designed to Do What Nothing Else Could</h2>
         <hr className="accent-rule" />
 
-        <div className="two-col">
-          <div className="col-img">
-            <img src={IMG.leaveInVsRinse} alt="Hair Helper Spray — 5 clinically-proven DHT blockers" />
-          </div>
+        <div>
           <div className="col-text">
             <p>"When I set out to formulate Hair Helper, I had three non-negotiables:</p>
             <p>It had to block DHT directly at the follicle — not somewhere downstream, not systemically, right at the site where the damage happens.</p>
@@ -274,7 +262,7 @@ function TreatmentSection() {
           </div>
         </div>
 
-        <div className="pink-highlight" style={{ margin: "20px 0" }}>
+        <div className="highlight-box" style={{ margin: "20px 0" }}>
           <strong>Why leave-in matters:</strong> Clinical studies on topical DHT blockers require sustained contact — hours, not seconds. Hair Helper stays on your scalp all day, giving active ingredients time to penetrate and work. Every shampoo, rinse, or conditioner on the market physically cannot do this.
         </div>
 
