@@ -660,52 +660,36 @@ function EvidenceSection() {
 
         <div className="trust-ticker" style={{ marginTop: "16px" }}>Clinically Proven &nbsp;•&nbsp; Drug-Free &nbsp;•&nbsp; 100% Natural &nbsp;•&nbsp; Dermatologist Approved</div>
 
-        {/* Masonry Wall */}
-        <h3 style={{ marginTop: "32px", marginBottom: "16px" }}>More Results From Our Community</h3>
-        <div className="masonry-wall">
-
-          <div className="masonry-item">
-            <img src={IMG.reviewers.jennifer} alt="Janet W." />
-            <div className="masonry-reviewer">Janet W. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
-            <div className="masonry-text">"I had no hair growth at both sides of fringe before using TryBello. You can see how it has made a big difference after starting this. My fringe too is getting longer and thicker. Going to continue with this spray until I reach the thickness of the fringe I want. Highly recommend."</div>
-            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+        {/* Community Photo Grid */}
+        <h3 style={{ marginTop: "32px", marginBottom: "16px" }}>More Stories From Our Community</h3>
+        <div className="community-photo-grid">
+          <div className="community-photo-item">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_1_64a2a1a2.webp" alt="Community member hair result 1" />
           </div>
-
-          <div className="masonry-item">
-            <img src={IMG.reviewers.lisa} alt="Mondaya H." />
-            <div className="masonry-reviewer">Mondaya H. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
-            <div className="masonry-text">"I have lost my hair since I became a mum, and have been trying out many hair products to assist hair regrowth for quite some time now. I ordered 3 bottles back in early May 2024. It's been 4 weeks since I tried. Twice a day everyday. I used 1 bottle now and results are very obvious, the front hair line on both sides are more fuller."</div>
-            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          <div className="community-photo-item">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_2_8794dfa8.jpg" alt="Community member hair result 2" />
           </div>
-
-          <div className="masonry-item">
-            <img src={IMG.reviewers.karen} alt="Linda Z." />
-            <div className="masonry-reviewer">Linda Z. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
-            <div className="masonry-text">"I was completely bald 4 months ago. I've been using TryBello for about 2½ months now and I have a ton of regrowth in the temple area. My hair also feels thicker all over. Is really seeing results and I am very happy."</div>
-            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          <div className="community-photo-item">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_3_6ce29ede.webp" alt="Community member hair result 3" />
           </div>
-
-          <div className="masonry-item">
-            <img src={IMG.reviewers.diane} alt="Mary H." />
-            <div className="masonry-reviewer">Mary H. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
-            <div className="masonry-text">"Two years ago I was diagnosed with breast cancer. It was found early, but I had to have chemo. My hair fell out and I tried all sorts of shampoos and hair vitamins. Nothing seemed to help. About 4 months ago I saw an advertisement for TryBello and read the reviews. I decided to try it. After about 3 weeks I began to see an improvement. Now 4 months later I have hair!"</div>
-            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          <div className="community-photo-item">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_4_e60a9c79.webp" alt="Community member hair result 4" />
           </div>
-
-          <div className="masonry-item">
-            <img src={IMG.reviewers.sandra} alt="Gloria S." />
-            <div className="masonry-reviewer">Gloria S. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
-            <div className="masonry-text">"I was skeptical but yet excited. Within two weeks of using TryBello, some of the hair loss was growing back. Not a lot, but I could see it with a mirror. Now after 8–10 weeks I can see that some hairs have filled in. I am so excited. I'm really happy, and I'm so glad I didn't fall for all those other methods. TryBello really works!"</div>
-            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          <div className="community-photo-item">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_5_65abdc45.webp" alt="Community member hair result 5" />
           </div>
-
-          <div className="masonry-item">
-            <img src={IMG.reviewers.margaret} alt="Tonya W." />
-            <div className="masonry-reviewer">Tonya W. &nbsp;<span className="stars" style={{ fontSize: "0.8rem" }}>★★★★★</span></div>
-            <div className="masonry-text">"About 1 week after starting using the Hair Helper, I saw little hairs all over the previously bald area. That's enough incentive for me to consistently use the spray every night before bed. After three weeks, many of the new hairs were about 2 inches long."</div>
-            <div className="verified-badge" style={{ fontSize: "0.72rem", marginTop: "6px" }}>✓ Verified Purchase</div>
+          <div className="community-photo-item">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_6_bc7ec557.webp" alt="Community member hair result 6" />
           </div>
-
+          <div className="community-photo-item community-photo-item--wide">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_7_55a3712d.webp" alt="Community before and after result 7" />
+          </div>
+          <div className="community-photo-item community-photo-item--wide">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_8_47bbc8fa.webp" alt="Community before and after result 8" />
+          </div>
+          <div className="community-photo-item community-photo-item--wide">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_9_36cafbc7.webp" alt="Community before and after result 9" />
+          </div>
         </div>
 
       </div>

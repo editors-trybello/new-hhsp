@@ -1339,3 +1339,41 @@ hr.section-rule {
     height: 200px;
   }
 }
+
+/* =============================================
+   COMMUNITY PHOTO GRID
+============================================= */
+.community-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0 32px;
+}
+.community-photo-item {
+  background: #F2EBE6;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.community-photo-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 10px;
+}
+/* Wide items (before/after side-by-side) span full row */
+.community-photo-item--wide {
+  grid-column: span 3;
+}
+
+@media (max-width: 680px) {
+  .community-photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .community-photo-item--wide {
+    grid-column: span 2;
+  }
+}
