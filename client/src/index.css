@@ -1498,15 +1498,20 @@ hr.section-rule {
 ============================================= */
 .ps-thumbs {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 8px;
   max-width: 520px;
   margin: 0 auto 20px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #c9a8b2 #f0e8eb;
+  -webkit-overflow-scrolling: touch;
 }
 .ps-thumb {
   width: 64px;
   height: 64px;
+  flex-shrink: 0;
   border: 2px solid transparent;
   border-radius: 8px;
   overflow: hidden;
@@ -1739,6 +1744,8 @@ hr.section-rule {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
+  white-space: nowrap;
 }
 .hero-v2-stock-dot { color: #27ae60; font-size: 0.7rem; }
 

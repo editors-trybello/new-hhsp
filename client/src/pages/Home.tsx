@@ -210,17 +210,7 @@ function HeroSection() {
               <span>🚚</span> Ships out in 1–2 business days
             </div>
 
-            {/* Payment icons */}
-            <div className="hero-v2-payments">
-              <span className="pay-icon">VISA</span>
-              <span className="pay-icon">MC</span>
-              <span className="pay-icon">AMEX</span>
-              <span className="pay-icon">Discover</span>
-              <span className="pay-icon">Apple Pay</span>
-              <span className="pay-icon">Google Pay</span>
-              <span className="pay-icon">PayPal</span>
-              <span className="pay-icon">Shop Pay</span>
-            </div>
+
 
             {/* Dr. Holmes endorsement */}
             <div className="hero-v2-dr">
