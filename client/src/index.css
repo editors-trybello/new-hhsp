@@ -1426,3 +1426,41 @@ hr.section-rule {
   .ingredients-layout { flex-direction: column; }
   .ingredients-image-col { flex: none; width: 100%; max-width: 340px; margin: 0 auto; }
 }
+
+/* =============================================
+   PRODUCT SLIDER THUMBNAILS
+============================================= */
+.ps-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 520px;
+  margin: 0 auto 20px;
+}
+.ps-thumb {
+  width: 64px;
+  height: 64px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+.ps-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ps-thumb:hover {
+  border-color: #8b2252;
+  transform: scale(1.05);
+}
+.ps-thumb.active {
+  border-color: #8b2252;
+  box-shadow: 0 0 0 2px rgba(139,34,82,0.25);
+}

@@ -32,29 +32,14 @@ function LifestyleMarquee() {
 /* ── Product Slider ── */
 function ProductSlider() {
   const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const TOTAL = IMG.productSlider.length;
 
-  const goTo = (n: number) => {
-    setCurrent(((n % TOTAL) + TOTAL) % TOTAL);
-  };
-
-  const resetAuto = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % TOTAL), 3500);
-  };
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % TOTAL), 3500);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, []);
-
-  const handleMove = (dir: number) => { goTo(current + dir); resetAuto(); };
-  const handleDot = (i: number) => { goTo(i); resetAuto(); };
+  const goTo = (n: number) => setCurrent(((n % TOTAL) + TOTAL) % TOTAL);
+  const handleMove = (dir: number) => goTo(current + dir);
 
   return (
     <div>
-      <div className="product-slider" style={{ maxWidth: "520px", margin: "0 auto 36px" }}>
+      <div className="product-slider" style={{ maxWidth: "520px", margin: "0 auto 16px" }}>
         <div className="ps-track" style={{ transform: `translateX(-${current * 100}%)` }}>
           {IMG.productSlider.map((src, i) => (
             <div key={i} className="ps-slide">
@@ -64,11 +49,19 @@ function ProductSlider() {
         </div>
         <button className="ps-btn ps-prev" onClick={() => handleMove(-1)} aria-label="Previous">←</button>
         <button className="ps-btn ps-next" onClick={() => handleMove(1)} aria-label="Next">→</button>
-        <div className="ps-dots">
-          {IMG.productSlider.map((_, i) => (
-            <button key={i} className={`ps-dot${i === current ? " active" : ""}`} aria-label={`Slide ${i + 1}`} onClick={() => handleDot(i)} />
-          ))}
-        </div>
+      </div>
+      {/* Thumbnail strip */}
+      <div className="ps-thumbs">
+        {IMG.productSlider.map((src, i) => (
+          <button
+            key={i}
+            className={`ps-thumb${i === current ? " active" : ""}`}
+            onClick={() => goTo(i)}
+            aria-label={`View image ${i + 1}`}
+          >
+            <img src={src} alt={`Thumbnail ${i + 1}`} />
+          </button>
+        ))}
       </div>
       <p className="ps-title">TryBello Hair Helper Spray</p>
     </div>
