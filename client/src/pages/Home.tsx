@@ -660,37 +660,7 @@ function EvidenceSection() {
 
         <div className="trust-ticker" style={{ marginTop: "16px" }}>Clinically Proven &nbsp;•&nbsp; Drug-Free &nbsp;•&nbsp; 100% Natural &nbsp;•&nbsp; Dermatologist Approved</div>
 
-        {/* Community Photo Grid */}
-        <h3 style={{ marginTop: "32px", marginBottom: "16px" }}>More Stories From Our Community</h3>
-        <div className="community-photo-grid">
-          <div className="community-photo-item">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_1_64a2a1a2.webp" alt="Community member hair result 1" />
-          </div>
-          <div className="community-photo-item">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_2_8794dfa8.jpg" alt="Community member hair result 2" />
-          </div>
-          <div className="community-photo-item">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_3_6ce29ede.webp" alt="Community member hair result 3" />
-          </div>
-          <div className="community-photo-item">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_4_e60a9c79.webp" alt="Community member hair result 4" />
-          </div>
-          <div className="community-photo-item">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_5_65abdc45.webp" alt="Community member hair result 5" />
-          </div>
-          <div className="community-photo-item">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_6_bc7ec557.webp" alt="Community member hair result 6" />
-          </div>
-          <div className="community-photo-item community-photo-item--wide">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_7_55a3712d.webp" alt="Community before and after result 7" />
-          </div>
-          <div className="community-photo-item community-photo-item--wide">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_8_47bbc8fa.webp" alt="Community before and after result 8" />
-          </div>
-          <div className="community-photo-item community-photo-item--wide">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_9_36cafbc7.webp" alt="Community before and after result 9" />
-          </div>
-        </div>
+
 
       </div>
     </div>
@@ -829,11 +799,13 @@ function SecondOpinionSection() {
       <div className="container">
 
         <span className="section-eyebrow">The Second Opinion</span>
-        <h2>What People, Just Like You, Are Saying About Hair Helper by TryBello</h2>
+        <h2>More Stories From Our Community</h2>
         <hr className="accent-rule" />
 
         <div className="extended-review">
-          <img src={IMG.reviewers.diane} alt="Diane W." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_1_64a2a1a2.webp" alt="Diane W. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Diane W. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I'd wasted over $2,000 on Nutrafol, Vegamour, and prescription Rogaine before finding this.</div>
@@ -843,7 +815,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.sandra} alt="Sandra L." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_2_8794dfa8.jpg" alt="Sandra L. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Sandra L. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I almost quit at month 2. Thank God I didn't.</div>
@@ -853,7 +827,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.margaret} alt="Margaret R." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_3_6ce29ede.webp" alt="Margaret R. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Margaret R. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I'm 67 years old. I wish I'd found this five years ago.</div>
@@ -863,7 +839,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.robin} alt="Robin A." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_4_e60a9c79.webp" alt="Robin A. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Robin A. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I hate subscriptions. Here's why I'm keeping this one.</div>
@@ -873,7 +851,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.carla} alt="Carla M." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_5_65abdc45.webp" alt="Carla M. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Carla M. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I always blamed myself for quitting too early. Turns out I just needed a system.</div>
@@ -883,7 +863,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.theresa} alt="Theresa K." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_6_bc7ec557.webp" alt="Theresa K. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Theresa K. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I stopped avoiding mirrors. That's how I know it's working.</div>
@@ -893,7 +875,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.patricia} alt="Patricia H." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_7_55a3712d.webp" alt="Patricia H. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Patricia H. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">I tracked everything. The numbers don't lie.</div>
@@ -903,7 +887,9 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.nancy} alt="Nancy B." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_8_47bbc8fa.webp" alt="Nancy B. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Nancy B. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">Between my mother's care and my grandkids, I'd forgotten about me.</div>
@@ -913,21 +899,13 @@ function SecondOpinionSection() {
         </div>
 
         <div className="extended-review">
-          <img src={IMG.reviewers.kim} alt="Kim D." />
+          <div className="extended-review-photo">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/community_9_36cafbc7.webp" alt="Kim D. result" />
+          </div>
           <div className="extended-review-body">
             <div className="extended-review-name">Kim D. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
             <div className="extended-review-title">My hairdresser thought I got extensions. I hadn't.</div>
             <div className="extended-review-text">"I've been going to the same hairdresser for 11 years. She's watched my hair thin progressively since I hit menopause at 48. Every appointment she'd try to be kind about it, but we both knew it was getting worse.<br /><br />At my last appointment — after 3 months on TryBello — she literally stopped mid-shampoo and said 'Did you get extensions?' When I told her no, she ran her fingers along my hairline and said 'You have all this new growth here. What are you using?'<br /><br />She's now recommending it to her other clients who are dealing with thinning. That's the validation I needed from someone who sees thousands of heads of hair and has no reason to lie to me.<br /><br />My crown still needs work, but my temples and part line have filled in more in 3 months than anything else accomplished in 5 years."</div>
-            <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
-          </div>
-        </div>
-
-        <div className="extended-review">
-          <img src={IMG.reviewers.beverly} alt="Beverly G." />
-          <div className="extended-review-body">
-            <div className="extended-review-name">Beverly G. &nbsp;<span className="stars" style={{ fontSize: "0.85rem" }}>★★★★★</span></div>
-            <div className="extended-review-title">This was genuinely my last try before accepting wigs.</div>
-            <div className="extended-review-text">"I'm not exaggerating. I had a wig consultation booked for the following month when I ordered TryBello. I'd already picked out two human hair toppers because I was that far gone mentally. Eleven products over four years, thousands of dollars, and my hair was still getting thinner.<br /><br />I ordered one bottle with zero expectations. Week 4: the shower drain wasn't full anymore after styling. I started cautiously paying attention. Week 10: baby hairs. Real ones. At my temples where I'd lost the most.<br /><br />I cancelled the wig consultation. I'm on the 3-month protocol now and I'm not looking back. I still have a ways to go, but for the first time in four years, I'm going forward instead of backward.<br /><br />If you're at the end of your rope like I was — just try it. What's one more month of hope going to cost you? Less than that wig, I promise."</div>
             <div className="verified-badge" style={{ marginTop: "8px" }}>✓ Verified Purchase</div>
           </div>
         </div>

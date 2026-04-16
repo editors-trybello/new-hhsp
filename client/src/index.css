@@ -1167,20 +1167,26 @@ li { margin-bottom: 0.4rem; }
 ============================================= */
 .extended-review {
   display: flex;
-  gap: 20px;
+  gap: 24px;
   align-items: flex-start;
-  margin: 28px 0;
-  padding-bottom: 28px;
+  margin: 36px 0;
+  padding-bottom: 36px;
   border-bottom: 1px solid #DDD5CC;
 }
 .extended-review:last-of-type { border-bottom: none; }
-.extended-review img {
-  flex: 0 0 80px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #DDD5CC;
+/* Photo column — left side, natural aspect ratio */
+.extended-review-photo {
+  flex: 0 0 180px;
+  width: 180px;
+}
+.extended-review-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #DDD5CC;
+  background: #F2EBE6;
 }
 .extended-review-body { flex: 1; }
 .extended-review-name {
@@ -1300,7 +1306,7 @@ hr.section-rule {
   .testimonial-header img { width: 70px; height: 70px; border-radius: 50%; }
 
   .extended-review { flex-direction: column; }
-  .extended-review img { flex: none; width: 80px; }
+  .extended-review-photo { flex: none; width: 100%; max-width: 260px; }
 
   .guarantee-tiers { flex-direction: column; }
 
@@ -1376,4 +1382,19 @@ hr.section-rule {
   .community-photo-item--wide {
     grid-column: span 2;
   }
+}
+
+/* =============================================
+   REVIEW PHOTO THUMBNAIL (inside testimonial cards)
+============================================= */
+.review-photo-thumb {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  margin: 12px 0 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #f7f0ec;
 }
