@@ -266,8 +266,17 @@ function TreatmentSection() {
           <strong>Why leave-in matters:</strong> Clinical studies on topical DHT blockers require sustained contact — hours, not seconds. Hair Helper stays on your scalp all day, giving active ingredients time to penetrate and work. Every shampoo, rinse, or conditioner on the market physically cannot do this.
         </div>
 
-        <h3 style={{ marginTop: "24px" }}>Hair Helper Active Ingredients</h3>
-        <div className="ingredient-accordion">
+        <div className="ingredients-layout">
+          <div className="ingredients-image-col">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663529409853/4LgaLDSzGoC3ye68jKJv7h/ingredients-flat-lay_80d3dda1.png"
+              alt="Hair Helper Spray surrounded by its 5 key natural ingredients"
+              className="ingredients-flat-lay"
+            />
+          </div>
+          <div className="ingredients-accordion-col">
+            <h3 style={{ marginTop: "0" }}>Hair Helper Active Ingredients</h3>
+            <div className="ingredient-accordion">
           <AccordionItem title="Caffeine">
             Blocks DHT effects on follicles by inhibiting phosphodiesterase, prolonging the anagen (growth) phase. A multicenter clinical trial showed <strong>15.33% reduction in hair loss</strong> after just 2 months of topical use.
           </AccordionItem>
@@ -283,7 +292,9 @@ function TreatmentSection() {
           <AccordionItem title="Biotin">
             Supports keratin production for follicle strength. Topical/oral combination studies show increased growth in women after 90–180 days — particularly effective for menopausal thinning.
           </AccordionItem>
-        </div>
+            </div>{/* end ingredient-accordion */}
+          </div>{/* end ingredients-accordion-col */}
+        </div>{/* end ingredients-layout */}
 
         <div className="dr-quote" style={{ marginTop: "24px" }}>
           "But here's what makes this fundamentally different from everything else you've tried:<br /><br />

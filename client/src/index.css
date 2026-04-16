@@ -1398,3 +1398,31 @@ hr.section-rule {
   border: 1px solid rgba(0,0,0,0.08);
   background: #f7f0ec;
 }
+
+/* =============================================
+   INGREDIENTS FLAT-LAY LAYOUT
+============================================= */
+.ingredients-layout {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin: 28px 0;
+}
+.ingredients-image-col {
+  flex: 0 0 340px;
+  width: 340px;
+}
+.ingredients-flat-lay {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+.ingredients-accordion-col {
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .ingredients-layout { flex-direction: column; }
+  .ingredients-image-col { flex: none; width: 100%; max-width: 340px; margin: 0 auto; }
+}
