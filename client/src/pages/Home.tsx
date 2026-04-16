@@ -98,44 +98,142 @@ function FaqItem({ question, children }: { question: string; children: React.Rea
    SECTION 1: THE DIAGNOSIS (HERO)
 ════════════════════════════════════════════════ */
 function HeroSection() {
+  const [selectedPlan, setSelectedPlan] = useState<"3month" | "1month" | "onetime">("3month");
+
+  const plans = {
+    "3month": {
+      label: "3-Month Growth Protocol",
+      badge: "FOR BEST RESULTS",
+      daily: "$1.11/day",
+      total: "$99.97",
+      strike: "$209.91",
+      href: "https://trybello.com/cart/add?id=53875933151542&selling_plan=8478032182&return_to=/checkout",
+      guarantee: "180-Day",
+    },
+    "1month": {
+      label: "1-Month Growth Plan",
+      badge: "MOST POPULAR",
+      daily: "$1.33/day",
+      total: "$39.97",
+      strike: "$69.99",
+      href: "https://trybello.com/cart/add?id=53875933118774&selling_plan=8477999414&return_to=/checkout",
+      guarantee: "120-Day",
+    },
+    "onetime": {
+      label: "One-Time Purchase",
+      badge: "",
+      daily: "",
+      total: "$49.00",
+      strike: "",
+      href: "http://trybello.com/cart/53875933184310:1",
+      guarantee: "60-Day",
+    },
+  };
+
+  const active = plans[selectedPlan];
+
   return (
     <div className="section" id="section1">
       <div className="container">
 
-        <div className="hero-layout">
-          {/* Left: Product + Dr. Holmes */}
-          <div className="hero-product-col">
-            <img className="product-main" src={IMG.heroProduct} alt="Hair Helper Spray by TryBello — Dermatologist Approved, DHT Blocker Verified" />
-            <div className="dr-credit">
-              <img src={IMG.drHolmesRef} alt="Dr. Yolanda Holmes, MD, FAAD" />
-              <div className="dr-credit-text">
-                <strong>Dr. Yolanda Holmes, MD, FAAD</strong>
-                Board-Certified Dermatologist<br />Washington, D.C.
+        <div className="hero-v2-layout">
+
+          {/* ── LEFT: Slider + featured review ── */}
+          <div className="hero-v2-left">
+            <ProductSlider />
+            {/* Featured review below slider */}
+            <div className="hero-featured-review">
+              <div className="hero-review-stars"><Stars /></div>
+              <p className="hero-review-quote">"I've tried minoxidil, biotin shampoos, scalp serums — nothing worked. I almost gave up. Then a friend sent me this. By week 6 I was seeing baby hairs at my part line. I cried. I actually cried."</p>
+              <div className="hero-review-author">
+                <img src={IMG.reviewers.jennifer} alt="Jennifer M." />
+                <span><strong>Jennifer M.</strong> — New York, US · Verified Buyer</span>
               </div>
             </div>
           </div>
 
-          {/* Right: Copy */}
-          <div className="hero-copy-col">
-            <h1>The 10-Second DHT-Blocking Treatment That Reduced Shedding by 73% in 30 Days</h1>
-            <hr className="accent-rule pink" />
-            <p className="subheadline">Board-certified dermatologist Dr. Yolanda Holmes developed this 10-second spray to block DHT directly at the follicle — where it actually matters.</p>
+          {/* ── RIGHT: Copy + offer cards + CTA ── */}
+          <div className="hero-v2-right">
 
-            <ul className="bullet-stack">
-              <li>5 clinically-proven DHT blockers at therapeutic concentrations</li>
-              <li>Leave-in formula — works for hours, not the 60 seconds a shampoo gives you</li>
-              <li>No drugs, no dependency, no "dread shed"</li>
-              <li>Visible results in as little as 30 days</li>
-              <li>Weightless, non-greasy, fits into any routine</li>
-            </ul>
+            {/* Rating */}
+            <div className="hero-v2-rating">
+              <Stars /> <span className="hero-v2-rating-text">4.8/5 based on <u>60,000+ reviews</u></span>
+            </div>
 
-            <div className="rating-line"><Stars /> &nbsp;4.8/5 &nbsp;•&nbsp; 60,000+ Reviews</div>
+            {/* Title */}
+            <h1 className="hero-v2-title">TryBello Hair Helper Spray</h1>
 
-            <a href="#section5" className="btn btn-lg">Start Your Treatment — 180-Day Guarantee</a>
+            {/* Description */}
+            <p className="hero-v2-desc">Board-certified dermatologist Dr. Yolanda Holmes developed this 10-second leave-in spray to block DHT directly at the follicle — 5 clinically-proven blockers at therapeutic concentrations. No drugs, no dependency, no dread shed.</p>
+
+            {/* Warning callout */}
+            <div className="hero-v2-warning">
+              <span className="hero-v2-warning-icon">⚠</span>
+              <div>
+                <div className="hero-v2-warning-title">Watch Out For Cheap Imitations.</div>
+                <div className="hero-v2-warning-body">Only Hair Helper Spray uses all 5 DHT-blocking extracts at therapeutic concentrations — the exact doses used in clinical studies.</div>
+              </div>
+            </div>
+
+            {/* Plan selector */}
+            <div className="hero-v2-plans-label">SELECT YOUR PLAN</div>
+            <div className="hero-v2-plans">
+              {(["3month", "1month", "onetime"] as const).map((key) => {
+                const p = plans[key];
+                return (
+                  <button
+                    key={key}
+                    className={`hero-v2-plan${selectedPlan === key ? " selected" : ""}`}
+                    onClick={() => setSelectedPlan(key)}
+                  >
+                    {p.badge && <span className="hero-v2-plan-badge">{p.badge}</span>}
+                    <span className="hero-v2-plan-name">{p.label}</span>
+                    <span className="hero-v2-plan-price">
+                      {p.daily && <span className="hero-v2-plan-daily">{p.daily}</span>}
+                      <span className="hero-v2-plan-total">
+                        {p.strike && <s>{p.strike}</s>} {p.total}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* CTA */}
+            <a href={active.href} className="btn btn-lg hero-v2-cta">
+              ADD TO CART — {active.guarantee} GUARANTEE
+            </a>
+
+            {/* In-stock + shipping */}
+            <div className="hero-v2-stock">
+              <span className="hero-v2-stock-dot">●</span> In stock &nbsp;·&nbsp;
+              <span>🚚</span> Ships out in 1–2 business days
+            </div>
+
+            {/* Payment icons */}
+            <div className="hero-v2-payments">
+              <span className="pay-icon">VISA</span>
+              <span className="pay-icon">MC</span>
+              <span className="pay-icon">AMEX</span>
+              <span className="pay-icon">Discover</span>
+              <span className="pay-icon">Apple Pay</span>
+              <span className="pay-icon">Google Pay</span>
+              <span className="pay-icon">PayPal</span>
+              <span className="pay-icon">Shop Pay</span>
+            </div>
+
+            {/* Dr. Holmes endorsement */}
+            <div className="hero-v2-dr">
+              <img src={IMG.drHolmesRef} alt="Dr. Yolanda Holmes, MD, FAAD" />
+              <div>
+                <strong>Dr. Yolanda Holmes, MD, FAAD</strong><br />
+                Board-Certified Dermatologist · Washington, D.C.<br />
+                <em>"This is the protocol I recommend to every patient."</em>
+              </div>
+            </div>
+
           </div>
         </div>
-
-
 
         {/* Stats Strip */}
         <div className="stats-strip">
