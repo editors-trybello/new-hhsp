@@ -504,7 +504,7 @@ function OfferSection() {
               <div className="guarantee-text"><strong>Day Empty Bottle Guarantee</strong>Complete the full protocol. If you don't see results, we refund every penny.</div>
             </div>
             <div className="offer-cancel">Skip, pause, or cancel anytime — no commitments, no hassle</div>
-            <a href="#" className="btn btn-full">Add to Cart → 180-Day Guarantee</a>
+            <a href="https://trybello.com/cart/add?id=53875933151542&selling_plan=8478032182&return_to=/checkout" className="btn btn-full">Add to Cart → 180-Day Guarantee</a>
             <div className="offer-dr-quote">"This is the protocol I recommend to every patient. 90 days gives your follicles one full growth cycle of uninterrupted protection." — Dr. Holmes</div>
           </div>
 
@@ -527,18 +527,15 @@ function OfferSection() {
               <div className="guarantee-text"><strong>Day Guarantee</strong>Try it for 4 months. Not satisfied? Full refund, no questions asked.</div>
             </div>
             <div className="offer-cancel">Skip, pause, or cancel anytime</div>
-            <a href="#" className="btn btn-full">Add to Cart</a>
+            <a href="https://trybello.com/cart/add?id=53875933118774&selling_plan=8477999414&return_to=/checkout" className="btn btn-full">Add to Cart</a>
           </div>
 
           {/* Card 3: One-Time Purchase (muted) */}
           <div className="offer-card muted">
             <div className="offer-plan-name">One-Time Purchase</div>
             <div className="offer-desc">1x Hair Helper Spray</div>
-            <span className="offer-price-daily" style={{ color: "#8A8078" }}>$1.63</span>
-            <span className="offer-price-daily-label">per day</span>
-            <div className="offer-price">
-              <span className="offer-price-total-label">Total:</span>
-              <span className="offer-price-main">$49.00</span>
+            <div className="offer-price" style={{ marginTop: "12px" }}>
+              <span className="offer-price-main" style={{ fontSize: "2.6rem" }}>$49.00</span>
             </div>
             <ul className="offer-includes">
               <li>Standard shipping</li>
@@ -548,7 +545,7 @@ function OfferSection() {
               <div className="guarantee-text"><strong>Day Guarantee</strong>Try it risk-free. Full refund if you're not satisfied.</div>
             </div>
             <div className="offer-cancel">&nbsp;</div>
-            <a href="#" className="btn btn-full" style={{ background: "#777" }}>Add to Cart</a>
+            <a href="http://trybello.com/cart/53875933184310:1" className="btn btn-full" style={{ background: "#777" }}>Add to Cart</a>
           </div>
 
         </div>
